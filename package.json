@@ -4,14 +4,18 @@
   "description": "create short link app ",
   "main": "app.js",
   "scripts": {
-    "start": "node app.js",
+    "start": "nodemon app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Damarus",
   "license": "MIT",
   "dependencies": {
+    "express": "^4.17.1",
     "form-data": "^3.0.0",
     "node-fetch": "^2.6.0",
     "sha1": "^1.1.1"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.2"
   }
 }
