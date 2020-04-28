@@ -1,0 +1,18 @@
+{% set title = 'Settings view' %}
+{% extends '_layout.html' %}
+{% block content %}
+<table>
+{% for row in settings %}
+  <tr>
+    <td>{{ row.user_api }}</td>
+    <td>{{ row.service }}</td>
+    <td>
+        {{ row.params.api }}
+        {{ row.params.id }}
+    </td>
+  </tr>
+{% else %}
+  <div>This would display if the 'item' collection were empty</div>
+{% endfor %}
+</table>
+{% endblock %}

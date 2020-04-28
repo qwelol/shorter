@@ -1,7 +1,10 @@
 const User = require("../models/users.js");
 
 exports.getUsers = (req,res)=>{
-    return res.json({ payload: User.getAll() });
+    let data = {
+        users: User.getAll(),
+    }
+    return res.render('users.html', data);
 }
 
 exports.getUser = (req,res)=>{

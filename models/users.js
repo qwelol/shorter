@@ -1,6 +1,6 @@
 const sha1 = require('sha1');
 
-const USERS = [{"login":"admin","pass":"admin", "api":"91665adb3dd17bb4171ca8dc95f499d511849da9"}];
+const USERS = [{"login":"admin","pass":"qwe", "api":"91665adb3dd17bb4171ca8dc95f499d511849da9"}];
 let ID = USERS.length;
 
 module.exports = class User{

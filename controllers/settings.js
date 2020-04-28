@@ -1,7 +1,11 @@
 const Settings = require("../models/settings");
 
 exports.getSettings = (req,res)=>{
-    return res.json({ payload: Settings.getAll() });
+    var data = {
+        settings: Settings.getAll()
+    } ;
+    return res.render('settings.html', data);
+    // res.json({ payload:  });
 }
 
 exports.getUserSettings = (req,res)=>{

@@ -2,7 +2,7 @@ const USER_SETTINGS = [
     {
         "user_api":"91665adb3dd17bb4171ca8dc95f499d511849da9",
         "service":"catcut",
-        "params":{"secret_key":"MI1ImUNi2uyC40HroU8ftqkUC68Ugxefee5SZ20BspLfdOQYhI0RKxaFRjx7XUh3ZcZDQVPCuEoRsLoAQdglKOyc6Ab0jBwpl287","id":"2683"}
+        "params":{"api":"MI1ImUNi2uyC40HroU8ftqkUC68Ugxefee5SZ20BspLfdOQYhI0RKxaFRjx7XUh3ZcZDQVPCuEoRsLoAQdglKOyc6Ab0jBwpl287","id":"2683"}
     },
     {
         "user_api":"91665adb3dd17bb4171ca8dc95f499d511849da9",
