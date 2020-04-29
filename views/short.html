@@ -5,5 +5,17 @@
     <input type="text"/>
     <input type="submit" />
 </form>
-<div class="url"></div>
+<div class="err"></div>
+<table class="links">
+    <tr> 
+        <td>Link</td>
+        <td>Date</td>
+    </tr>
+    {% for link in links %}
+        <tr> 
+            <td>{{ link.url }}</td>
+            <td>{{ link.created_at }}</td>
+        </tr>
+    {% endfor %}
+</table>
 {% endblock %}

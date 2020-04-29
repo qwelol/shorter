@@ -1,15 +1,25 @@
 const Shorter = require('../services/shorter');
+const Link = require("../models/short.js");
+
+const USER_API="91665adb3dd17bb4171ca8dc95f499d511849da9";
 
 exports.getShortLink = (req,res)=>{
-    return res.render('short.html');
+    let data = {
+        links: Link.getAll(),
+    }
+    return res.render('short.html',data);
 }
 
 exports.postShortLink = (req,res)=>{
     let { url } = req.body;
     console.log("url",url);
-    if (url){
+    if (url && url!==""){
         Shorter.test();
-        res.json(url);
+        let link = new Link(USER_API,url);
+        link.save();
+        console.log("link",link);
+        
+        res.json({payload:link});
         // Shorter.flShort(url).then(url=>{
         //     setTimeout(()=>(console.log("1")),5);
         //     Shorter.catcutShort(url).then(url=>{
@@ -43,7 +53,7 @@ exports.postShortLink = (req,res)=>{
         // });
     }
     else {
-        res.send("ERR: no url in query");
+        res.sendStatus(400)
     }
     // Shorter.test();
 }
