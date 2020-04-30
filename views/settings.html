@@ -7,8 +7,8 @@
     <td>{{ row.user_api }}</td>
     <td>{{ row.service }}</td>
     <td>
-        {{ row.params.api }}
-        {{ row.params.id }}
+        {{ row.params.get("api") }}
+        {{ row.params.get("id") }}
     </td>
   </tr>
 {% else %}

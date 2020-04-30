@@ -1,27 +1,59 @@
 const Settings = require("../models/settings");
 
 exports.getSettings = (req,res)=>{
-    var data = {
-        settings: Settings.getAll()
-    } ;
-    return res.render('settings.html', data);
-    // res.json({ payload:  });
+    Settings.find({}, (err, settings)=>{
+        if (err) {
+            console.log(err);
+            return res.sendStatus(400);
+        }
+        return res.render('settings.html',{settings});
+    }); 
 }
 
 exports.getUserSettings = (req,res)=>{
-    const { api } = req.params;   
-    return res.json({ payload: Settings.getSettings(api) });
+    const { api } = req.params; 
+
+    // return res.json({ payload: Settings.getSettings(api) });
 }
 
-exports.createSettings = (req,res)=>{
+exports.createSettings = async (req,res)=>{
     const { body } = req;
     console.log("body",body);
     const { service, params, user_api } = body;
-    if (user_api && service && params && !Settings.getAll().find((record) => record.user_api === user_api && record.service === service)){
-        const record = new Settings (user_api, service, params);
-        console.log("record",record);
-        record.save();
-        res.json({payload:record});
+    // !Settings.getAll().find((record) => record.user_api === user_api && record.service === service
+    if (user_api && service && params){
+        try {
+            let record = await Settings.findOne({
+                user_api:{
+                    $regex:user_api
+                    .replace(/[|\\{}()[\]^$+*?.]/g, '\\$&')
+                    .replace(/-/g, '\\x2d'),
+                    $options: "i"
+                },
+                service:{
+                    $regex:service
+                    .replace(/[|\\{}()[\]^$+*?.]/g, '\\$&')
+                    .replace(/-/g, '\\x2d'),
+                    $options: "i"
+                }
+            }).lean().exec();
+            if (record){
+                res.sendStatus(400);
+            }
+            record = new Settings ({
+                user_api,
+                service,
+                params
+            });
+            record.save(err=>{
+                if (err) console.log(err);
+                res.json({payload:record});
+                console.log("record",record);
+            });
+        } catch (err) {
+            console.log(err);
+            res.status(500);
+        }
     }
     else {
         res.sendStatus(400);

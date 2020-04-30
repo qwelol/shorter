@@ -4,10 +4,13 @@ const Link = require("../models/short.js");
 const USER_API="91665adb3dd17bb4171ca8dc95f499d511849da9";
 
 exports.getShortLink = (req,res)=>{
-    let data = {
-        links: Link.getAll(),
-    }
-    return res.render('short.html',data);
+    Link.find({}, (err, links)=>{
+        if (err) {
+            console.log(err);
+            return res.sendStatus(400);
+        }
+        return res.render('short.html',{links});
+    });   
 }
 
 exports.postShortLink = (req,res)=>{
@@ -15,11 +18,19 @@ exports.postShortLink = (req,res)=>{
     console.log("url",url);
     if (url && url!==""){
         Shorter.test();
-        let link = new Link(USER_API,url);
-        link.save();
-        console.log("link",link);
-        
-        res.json({payload:link});
+        let link = new Link({
+            user_api:USER_API,
+            long_url:url,
+            short_url:url,
+            created_at: new Date()
+        });
+        // res.json({payload:link});
+        link.save(err=>{
+            if (err) console.log(err);
+            res.json({payload:link});
+            console.log("link",link);
+        });
+
         // Shorter.flShort(url).then(url=>{
         //     setTimeout(()=>(console.log("1")),5);
         //     Shorter.catcutShort(url).then(url=>{
@@ -56,4 +67,18 @@ exports.postShortLink = (req,res)=>{
         res.sendStatus(400)
     }
     // Shorter.test();
+}
+
+exports.deleteShortLink = (req,res)=>{
+    const { api , url} = req.params;
+    console.log(api,url);
+    
+    if (api && url){
+        Link.deleteOne({user_api:api, short_url:url},(err,deleteResult)=>{
+                if (err) res.sendStatus(400);
+                res.json({payload: deleteResult.n});
+            });
+    } else {
+        res.sendStatus(400);
+    }
 }
