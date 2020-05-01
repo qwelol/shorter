@@ -12,7 +12,13 @@ exports.getSettings = (req,res)=>{
 
 exports.getUserSettings = (req,res)=>{
     const { api } = req.params; 
-
+    Settings.find({user_api:api}, (err, settings)=>{
+        if (err) {
+            console.log(err);
+            return res.sendStatus(400);
+        }
+        return res.json({payload:settings});
+    }); 
     // return res.json({ payload: Settings.getSettings(api) });
 }
 
@@ -24,21 +30,11 @@ exports.createSettings = async (req,res)=>{
     if (user_api && service && params){
         try {
             let record = await Settings.findOne({
-                user_api:{
-                    $regex:user_api
-                    .replace(/[|\\{}()[\]^$+*?.]/g, '\\$&')
-                    .replace(/-/g, '\\x2d'),
-                    $options: "i"
-                },
-                service:{
-                    $regex:service
-                    .replace(/[|\\{}()[\]^$+*?.]/g, '\\$&')
-                    .replace(/-/g, '\\x2d'),
-                    $options: "i"
-                }
+                user_api,
+                service
             }).lean().exec();
             if (record){
-                res.sendStatus(400);
+                return res.sendStatus(400);
             }
             record = new Settings ({
                 user_api,
@@ -47,16 +43,16 @@ exports.createSettings = async (req,res)=>{
             });
             record.save(err=>{
                 if (err) console.log(err);
-                res.json({payload:record});
                 console.log("record",record);
+                return res.json({payload:record});
             });
         } catch (err) {
             console.log(err);
-            res.status(500);
+            return res.status(500);
         }
     }
     else {
-        res.sendStatus(400);
+        return res.sendStatus(400);
     }
 }
 
@@ -64,16 +60,30 @@ exports.changeSettings = (req,res)=>{
     const { api , service} = req.params;
     const { params } = req.body;
     if (params){
-        const record = Settings.updateSettings(api,service,params);
-        res.json({ payload: record });
+        Settings.updateOne({
+            user_api:api,
+            service
+        }, {
+            params
+        }, (err,result)=>{
+            if (err) return res.sendStatus(400);
+            return res.json({ payload: result });
+        });
     }
     else {
-        res.sendStatus(400);
+        return res.sendStatus(400);
     }
 }
 
 exports.deleteSettings = (req,res)=>{
-    const { api , service} = req.params;
-    Settings.deleteSettings(api,service);
-    res.json({payload: {api:api}});
+    const { api, service} = req.params;
+    console.log( api,service);
+    if ( api,service){
+        Settings.deleteOne({user_api:api,service},(err,deleteResult)=>{
+                if (err) return res.sendStatus(400);
+                return res.json({payload: deleteResult.n});
+            });
+    } else {
+        return res.sendStatus(400);
+    }
 }
