@@ -26,7 +26,7 @@ window.onload = () => {
                 longUrl.textContent = data.payload.long_url;             
                 date.textContent = new Date (data.payload.created_at).toGMTString(); 
                 delBtn.textContent = "X";
-                delBtn.dataset.url = data.payload.short_url;
+                delBtn.dataset.id = data.payload._id;
                 delBtn.onclick = deleteUrl;
                 row.append(shortUrl);
                 row.append(longUrl);
@@ -52,9 +52,8 @@ window.onload = () => {
         buttons[i].onclick = deleteUrl;
     }
     function deleteUrl (e){
-        if (USER_API && e.target.dataset.url){
-            let params = USER_API + "&&" + e.target.dataset.url;
-            fetch("/short/"+params,{
+        if (USER_API && e.target.dataset.id){
+            fetch("/short/"+e.target.dataset.id,{
                 method:'DELETE'
             }).then(res=>{
                 return res.json();
