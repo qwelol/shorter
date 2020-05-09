@@ -1,7 +1,55 @@
 {% set title = 'Settings view' %}
 {% extends '_layout.html' %}
 {% block content %}
-<table>
+  <div>
+    <form class="short-form" id="flShort" data-filled= {{ not not settings.flShort[0] }}>
+      <div>Fc.lc</div>
+      <label>
+        <span>Api:</span><input type="text" value={{ settings.flShort[0] }} >
+        <input type="submit">
+      </label>
+    </form>
+    <form class="short-form" id="shorteSt" data-filled= {{ not not settings.shorteSt[0] }}>
+      <div>Shorte.st</div>
+      <label>
+        <span>Api:</span><input type="text" value={{settings.shorteSt[0]}} >
+        <input type="submit">
+      </label>
+    </form>
+    <form class="short-form" id="exeShort" data-filled= {{ not not settings.exeShort[0] }}>
+      <div>Exe.io</div>
+      <label>
+        <span>Api:</span><input type="text" value={{settings.exeShort[0]}}>
+        <input type="submit">
+      </label>
+    </form>
+    <form class="short-form" id="profitLinkShort" data-filled= {{ not not settings.profitLinkShort[0] }}>
+      <div>Profit-link</div>
+      <label>
+        <span>Api:</span><input type="text" value={{settings.profitLinkShort[0]}} >
+        <input type="submit">
+      </label>
+    </form>
+    <form class="short-form" id="q32Short" data-filled= {{ not not settings.q32Short[0] }}>
+      <div>Q32</div>
+      <label>
+        <span>Api:</span><input type="text" value={{settings.q32Short[0]}}>
+        <input type="submit">
+      </label>
+    </form>
+    <form class="short-form" id="catcutShort" data-filled= {{ not not (settings.catcutShort[0] and settings.catcutShort[1])}}>
+      <div>CatCut</div>
+      <label>
+        <span>ID:</span>
+        <input type="text" value={{settings.catcutShort[0]}}>
+        <span>Api:</span>
+        <input type="text" value={{settings.catcutShort[1]}}>
+        <input type="submit">
+      </label>
+    </form>
+  </div>
+  {#
+<!-- <table>
 {% for row in settings %}
   <tr>
     <td>{{ row.user_api }}</td>
@@ -14,5 +62,6 @@
 {% else %}
   <div>This would display if the 'item' collection were empty</div>
 {% endfor %}
-</table>
+</table> -->
+#}
 {% endblock %}

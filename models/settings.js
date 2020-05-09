@@ -1,18 +1,18 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
-const settingsSchema = new Schema({
+const settingsSchema = new Schema(
+  {
     user_api: String,
-    service:String,
-    params:{
-        type: Map,
-        of: String
-    },
-},{
-    versionKey:false
-})
+    service: String,
+    params: Array,
+  },
+  {
+    versionKey: false,
+  }
+);
 
-module.exports = mongoose.model('Settings', settingsSchema);
+module.exports = mongoose.model("Settings", settingsSchema);
 // const USER_SETTINGS = [
 //     {
 //         "user_api":"91665adb3dd17bb4171ca8dc95f499d511849da9",
@@ -32,7 +32,7 @@ module.exports = mongoose.model('Settings', settingsSchema);
 // ]
 
 // module.exports = class Settings{
- 
+
 //     constructor(user_api, service,params){
 //         this.user_api = user_api;
 //         this.service = service;
