@@ -1,20 +1,23 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
-const usersSchema = new Schema({
+const usersSchema = new Schema(
+  {
     login: String,
-    pass:String,
-    api:String
-},{
-    versionKey:false
-})
+    pass: String,
+    api: String,
+  },
+  {
+    versionKey: false,
+  }
+);
 
-module.exports = mongoose.model('User', usersSchema);
+module.exports = mongoose.model("User", usersSchema);
 // const USERS = [{"login":"admin","pass":"qwe", "api":"91665adb3dd17bb4171ca8dc95f499d511849da9"}];
 // let ID = USERS.length;
 
 // module.exports = class User{
- 
+
 //     constructor(login, pass){
 //         this.login = login;
 //         this.pass = pass;

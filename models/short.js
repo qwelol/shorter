@@ -1,16 +1,19 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
-const linksSchema = new Schema({
+const linksSchema = new Schema(
+  {
     user_api: String,
-    long_url:String,
-    short_url:String,
-    created_at: Date
-},{
-    versionKey:false
-})
+    long_url: String,
+    short_url: String,
+    created_at: Date,
+  },
+  {
+    versionKey: false,
+  }
+);
 
-module.exports = mongoose.model('Short', linksSchema);
+module.exports = mongoose.model("Short", linksSchema);
 // const LINKS = [
 //     {
 //         "id":1,
@@ -22,7 +25,7 @@ module.exports = mongoose.model('Short', linksSchema);
 // let ID = LINKS.length;
 
 // module.exports = class Short{
- 
+
 //     constructor(user_api, url){
 //         this.id = ID;
 //         this.user_api = user_api;

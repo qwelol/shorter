@@ -1,17 +1,18 @@
 <!doctype html>
-
 <html>
-<head>
-  <meta charset="utf-8">
-  <title>{{ title }}</title>
-  <link rel="stylesheet" href="css/style.css?v=1.0">
-  {% if title === "Short view" %}
-  <script type="text/javascript" src="js/short.js"></script>
-  {% endif %}
-</head>
-<body>
-  <h1>{{ title }}</h1>
-  {% block content %}
-  {% endblock %}
-</body>
+  <head>
+    <meta charset="utf-8">
+    <title>{{ title }}</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+    {% if title === "Short view" %}
+      <script type="text/javascript" src="/static/js/short.js"></script>
+    {% endif %}
+    {% if title === "Settings view" %}
+      <script type="text/javascript" src="/static/js/settings.js"></script>
+    {% endif %}
+  </head>
+  <body>
+    <h1>{{ title }}</h1>
+    {% block content %}{% endblock %}
+  </body>
 </html>
