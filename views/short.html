@@ -1,0 +1,62 @@
+{% set title = 'Short view' %}
+{% extends '_layout.html' %}
+{% block content %}
+  <form class="short-form">
+    <input type="text"/>
+    <input type="submit"/>
+    <div>
+      <label>
+        <input type="checkbox" name="useCatcut"/>
+        <span>Использвать Catcut в качестве прослойки</span>
+      </label>
+    </div>
+    <div class="params">
+      <label>
+        <input type="checkbox" value="flShort"/>
+        <span>Fl</span>
+      </label>
+      <label>
+        <input type="checkbox" value="shorteSt"/>
+        <span>ShorteSt</span>
+      </label>
+      <label>
+        <input type="checkbox" value="exeShort"/>
+        <span>Exe</span>
+      </label>
+      <label>
+        <input type="checkbox" value="profitLinkShort"/>
+        <span>Profit-link</span>
+      </label>
+      <label>
+        <input type="checkbox" value="q32Short"/>
+        <span>Q32</span>
+      </label>
+      <label>
+        <input type="checkbox" value="catcutShort" id="catcut"/>
+        <span>Catcut</span>
+      </label>
+    </div>
+  </form>
+  <div class="err"></div>
+  <table class="links">
+    <thead>
+      <tr>
+        <td>Short Link</td>
+        <td>Long Link</td>
+        <td>Date</td>
+      </tr>
+    </thead>
+    <tbody>
+      {% for link in links %}
+        <tr>
+          <td>{{ link.short_url }}</td>
+          <td>{{ link.long_url }}</td>
+          <td>{{ link.created_at.toGMTString() }}</td>
+          <td>
+            <button class="delete" data-id="{{ link._id }}">X</button>
+          </td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endblock %}
