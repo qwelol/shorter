@@ -4,13 +4,18 @@ const User = require("../models/users");
 const Settings = require("../models/settings");
 
 exports.getShortLink = (req, res) => {
-  Link.find({}, (err, links) => {
-    if (err) {
-      console.log(err);
-      return res.sendStatus(400);
-    }
-    return res.render("short.html", { links:links.reverse() });
-  });
+  let {user} = req;
+  if (user) {
+    Link.find({user_api:user}, (err, links) => {
+      if (err) {
+        console.log(err);
+        return res.sendStatus(400);
+      }
+      return res.render("short.html", { links:links.reverse() });
+    });
+  } else {
+    return res.redirect("/");
+  }
 };
 
 exports.postShortLink = async (req, res) => {
@@ -37,10 +42,14 @@ exports.postShortLink = async (req, res) => {
     try {
       for (let i = 0; i < shortList.length; i++) {
         console.log(i);
-        shortUrl = await Shorter[shortList[i]](
-          shortUrl,
-          ...settings[shortList[i]]
-        );
+        if (settings[shortList[i]]){
+          shortUrl = await Shorter[shortList[i]](
+            shortUrl,
+            ...settings[shortList[i]]
+          );
+        } else {
+          return res.status(400).send('No settings for '+shortList[i]);
+        }
       }
     } catch (err) {
       console.log(err);

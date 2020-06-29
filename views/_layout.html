@@ -12,7 +12,20 @@
     {% endif %}
   </head>
   <body>
+    <nav class="menu">
+      <div class="menu-container">
+        <a class="menu-item" href="/short">Short</a>
+        <a class="menu-item" href="/settings">Settings</a>
+      </div>
+      <form method="POST" action="/users/logout" class="logout-form">
+        <button type="submit" class="logout-btn">Logout</button>
+      </form>
+    </nav>
     <h1>{{ title }}</h1>
-    {% block content %}{% endblock %}
+    <main class="main">
+      {% block content %}{% endblock %}
+    </main>
+    <footer>
+    </footer>
   </body>
 </html>

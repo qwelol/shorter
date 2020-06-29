@@ -12,28 +12,31 @@ exports.getSettings = (req, res) => {
 };
 
 exports.getUserSettings = (req, res) => {
-  const { api } = req.params;
-  User.exists({ api }, (err, val) => {
-    if (err) console.log(err);
-    if (val) {
-      Settings.find({ user_api: api }, (err, settings) => {
-        if (err) {
-          console.log(err);
-          return res.sendStatus(400);
-        }
-        let vSet = {};
-        settings.forEach((el) => {
-          vSet[el.service] = el.params;
-        });
-        console.log(vSet);
+  const api = req.user; 
+  if (api){
+    User.exists({ api }, (err, val) => {
+      if (err) console.log(err);
+      if (val) {
+        Settings.find({ user_api: api }, (err, settings) => {
+          if (err) {
+            console.log(err);
+            return res.sendStatus(400);
+          }
+          let vSet = {};
+          settings.forEach((el) => {
+            vSet[el.service] = el.params;
+          });
+          console.log(vSet);
 
-        return res.render("settings.html", { settings: vSet });
-      });
-    } else {
-      return res.sendStatus(404);
-    }
-  });
-  // return res.json({ payload: Settings.getSettings(api) });
+          return res.render("settings.html", { settings: vSet });
+        });
+      } else {
+        return res.sendStatus(404);
+      }
+    });
+  } else {
+    return res.redirect("/");
+  }
 };
 
 exports.createSettings = async (req, res) => {

@@ -90,3 +90,23 @@ exports.deleteUser = (req,res)=>{
         return res.json({payload: deleteResult.n});
     });
 }
+exports.login = (req,res)=>{
+    console.log(req.body);
+    const { login, password } = req.body;
+    Users.findOne({ login }, (err, user)=>{
+        if (err) return res.sendStatus(500);
+        if (user){
+            console.log("user",user);
+            if (password === user.pass){
+                return res.status(200).cookie("user",user.api).redirect("/short");
+            } else {
+                return res.status(400).send("Invalid credentials");
+            } 
+        } else {
+            return res.status(404).send("User not found");
+        } 
+    })
+}
+exports.logout = (req,res)=>{
+    return res.clearCookie("user").redirect("/");
+}
