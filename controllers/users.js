@@ -2,25 +2,34 @@ const Users = require("../models/users.js");
 const sha1 = require('sha1');
 
 exports.getUsers = (req,res)=>{
-    Users.find({}, (err, users)=>{
-        if (err) {
-            console.log(err);
-            return res.sendStatus(400);
-        }
-        return res.render('users.html',{users});
-    }); 
+    const { user } = req;
+    if (user){
+        Users.find({}, (err, users)=>{
+            if (err) {
+                console.log(err);
+                return res.sendStatus(400);
+            }
+            return res.render('users.html',{users});
+        }); 
+    } else {
+        return res.redirect("/");
+    }
 }
 
 exports.getUser = (req,res)=>{
-    const { api } = req.params;
-    Users.find({api}, (err, user)=>{
-        if (err) {
-            console.log(err);
-            return res.sendStatus(400);
-        }
-        return res.json({payload:user});
-    }); 
-    // return res.json({ payload: User.getUser(api) });
+    const { user } = req;
+    if (user){
+        const { api } = req.params;
+        Users.find({api}, (err, user)=>{
+            if (err) {
+                console.log(err);
+                return res.sendStatus(400);
+            }
+            return res.json({payload:user});
+        }); 
+    } else {
+        return res.redirect("/");
+    }
 }
 
 exports.createUser = async (req,res)=>{
@@ -91,14 +100,16 @@ exports.deleteUser = (req,res)=>{
     });
 }
 exports.login = (req,res)=>{
-    console.log(req.body);
-    const { login, password } = req.body;
+    const { login, password, remember } = req.body;
     Users.findOne({ login }, (err, user)=>{
         if (err) return res.sendStatus(500);
         if (user){
             console.log("user",user);
             if (password === user.pass){
-                return res.status(200).cookie("user",user.api).redirect("/short");
+                let expires = remember? new Date(Date.now() + 2.592e8) : 0;
+                console.log("expires",expires);
+                
+                return res.status(200).cookie("user",user.api, {samesite: "strict", httpOnly: true, expires }).redirect("/short");
             } else {
                 return res.status(400).send("Invalid credentials");
             } 

@@ -1,5 +1,3 @@
-const USER_API = "91665adb3dd17bb4171ca8dc95f499d511849da9";
-
 window.onload = () => {
   let form = document.querySelector("form.short-form");
   let useCatcut = form.elements.namedItem("useCatcut");
@@ -12,7 +10,7 @@ window.onload = () => {
     e.preventDefault();
     if (form.elements[0].value) {
       let paramsInputs = form.querySelectorAll(".params input");
-      let url = form.elements[0].value;
+      let longUrl = form.elements[0].value;
       let shortList = [];
       if (useCatcut.checked) {
         for (let i = 0; i < paramsInputs.length; i++) {
@@ -35,9 +33,8 @@ window.onload = () => {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            url,
+            longUrl,
             shortList,
-            api: USER_API,
           }),
         })
           .then((res) => {
@@ -85,7 +82,7 @@ window.onload = () => {
     buttons[i].onclick = deleteUrl;
   }
   function deleteUrl(e) {
-    if (USER_API && e.target.dataset.id) {
+    if (e.target.dataset.id) {
       fetch("/short/" + e.target.dataset.id, {
         method: "DELETE",
       })

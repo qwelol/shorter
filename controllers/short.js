@@ -18,9 +18,9 @@ exports.getShortLink = (req, res) => {
   }
 };
 
-exports.postShortLink = async (req, res) => {
-  let longUrl = req.body.url;
-  let { shortList, api } = req.body;
+exports.createShortLink = async (req, res) => {
+  const { shortList, longUrl } = req.body;
+  const api = req.user;
   let userExists = await User.exists({ api });
   let docs = await Settings.find({user_api:api}).exec();
   let settings = {};
@@ -77,9 +77,10 @@ exports.postShortLink = async (req, res) => {
 };
 
 exports.deleteShortLink = (req, res) => {
+  const { user } = req;
   const { id } = req.params;
-  console.log(id);
-  if (id) {
+  console.log("deleteShortLink: ",id);
+  if (id, user) {
     Link.findByIdAndDelete(id, (err, deleteResult) => {
       if (err) return res.sendStatus(400);
       return res.json({ payload: deleteResult });

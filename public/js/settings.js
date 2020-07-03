@@ -1,5 +1,3 @@
-const USER_API = "91665adb3dd17bb4171ca8dc95f499d511849da9";
-
 window.onload = () => {
   let forms = document.querySelectorAll("form.short-form");
   for (let i = 0; i < forms.length; i++) {
@@ -20,8 +18,8 @@ window.onload = () => {
       console.log("method",method);
       if (method === "DELETE") { formFilled=!formFilled }
       if (formFilled && service) {
-        let path = method === "POST"? "/settings":"/settings/"+USER_API+"&&"+service;
-        let data = method === "PUT"? {params} : "POST"?{ service, params, user_api: USER_API } : null;
+        let path = method === "POST"? "/settings":"/settings/"+service;
+        let data = method === "PUT"? {params} : "POST"?{ service, params } : null;
         fetch(path, {
           method: method,
           headers: {

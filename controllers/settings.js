@@ -40,14 +40,12 @@ exports.getUserSettings = (req, res) => {
 };
 
 exports.createSettings = async (req, res) => {
-  console.log("POST");
-
   const { body } = req;
-  const { service, params, user_api } = body;
+  const user_api = req.user;
+  const { service, params} = body;
   console.log(user_api, service);
-  console.log("service", service, "params", params, "user_api", user_api);
+  console.log("createSettings: "+"service", service, "params", params, "user_api", user_api);
   let userExists = await User.exists({ api: user_api });
-  // !Settings.getAll().find((record) => record.user_api === user_api && record.service === service
   if (user_api && service && params && userExists) {
     try {
       Settings.exists({ user_api, service }, (err, val) => {
@@ -77,9 +75,9 @@ exports.createSettings = async (req, res) => {
 };
 
 exports.changeSettings = (req, res) => {
-  console.log("PUT");
-  const { api, service } = req.params;
-  console.log(api, service);
+  const api = req.user;
+  const { service } = req.params;
+  console.log("changeSettings: ",api, service);
   const { params } = req.body;
   if (params) {
     Settings.exists({ user_api: api, service }, (err, val) => {
@@ -108,8 +106,9 @@ exports.changeSettings = (req, res) => {
 };
 
 exports.deleteSettings = (req, res) => {
-  const { api, service } = req.params;
-  console.log(api, service);
+  const api = req.user;
+  const { service } = req.params;
+  console.log("deleteSettings: ",api, service);
   if ((api, service)) {
     Settings.exists({ user_api: api, service }, (err, val) => {
       if (err) console.log(err);

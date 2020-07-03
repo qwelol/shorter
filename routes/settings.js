@@ -5,8 +5,8 @@ const settingsController = require("../controllers/settings")
 const checkAuth = require("../services/auth").checkAuth
 
 router.get('/',checkAuth, settingsController.getUserSettings);
-router.post('/',settingsController.createSettings);
-router.put('/:api&&:service',settingsController.changeSettings);
-router.delete('/:api&&:service',settingsController.deleteSettings);
+router.post('/', checkAuth, settingsController.createSettings);
+router.put('/:service', checkAuth,settingsController.changeSettings);
+router.delete('/:service', checkAuth,settingsController.deleteSettings);
 
 module.exports = router
