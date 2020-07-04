@@ -1,11 +1,11 @@
 const User = require("../models/users");
 
 exports.checkAuth = function checkAuth (req,res,next) {
-    let user = req.cookies.user;
-    console.log("checkAuth:user",user);
-    User.exists({api:user}, (err,userExists)=>{
+    let token = req.cookies.user;
+    console.log("checkAuth:user",token);
+    User.findOne({api:token}, (err,user)=>{
         if (err) return res.sendStatus(500);
-        req.user = userExists? user : null;
+        req.user = user;
         next();
     });
   }

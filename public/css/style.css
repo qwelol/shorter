@@ -5,64 +5,57 @@ body {
   display: flex;
   justify-content: space-between;
   width: 100%;
-  height: 100%;
+  height: 60px;
   background-color: lightblue;
 }
-.menu-container {
+.menu .menu-container {
   display: flex;
+  justify-content: space-between;
+  flex-direction: row-reverse;
   width: 100%;
   max-width: 1920px;
   height: 60px;
-  margin:auto;
+  margin: auto;
+}
+.menu-container .links {
+  display: flex;
 }
 .menu-item {
   display: flex;
   height: 100%;
-  width: 60px;
   align-items: center;
   justify-content: center;
   margin-left: 10px;
   font-size: 1.2rem;
 }
+.menu-item:first-child {
+  margin-left: 0;
+}
 a.menu-item {
   color: black;
   text-decoration: none;
+}
+.user-container {
+  display: flex;
+}
+.user-container .username {
+  display: flex;
+  align-items: center;
+  font-size: 1.2rem;
+  cursor: default;
+}
+.logout-btn {
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+  font-size: 1.2rem;
 }
 .main {
   width: 100%;
   height: 100%;
 }
-.login-form {
-  width: 250px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin:auto;
-}
-.login-form label {
-  display: flex;
-  width:100%;
-  justify-content: space-between;
-  align-items: center;
-}
-.login-form label.remember {
-  justify-content: flex-start;
-}
-.login-form label.remember input {
-  margin: 0px 10px 3px 0px;
-}
-.short-form label {
-  display: block;
-}
-.params {
-  border: 1px solid black;
-}
-.logout-btn {
+.main .content {
   width: 100%;
-  height: 100%;
-  background: transparent;
-  outline: none;
-  border: none;
-  cursor: pointer;
-  font-size: 1.2rem;
+  max-width: 1920px;
+  margin: auto;
 }

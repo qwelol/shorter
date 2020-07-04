@@ -30,7 +30,7 @@ app.get("/", checkAuth, (req, res) => {
   if (req.user){
     return res.redirect("/short");
   }
-  return res.render("login.html");
+  return res.render("users/login.html");
 });
 mongoose.connect(
   CONNECTION_STRING,

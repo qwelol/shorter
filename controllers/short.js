@@ -4,14 +4,15 @@ const User = require("../models/users");
 const Settings = require("../models/settings");
 
 exports.getShortLink = (req, res) => {
-  let {user} = req;
+  let { user } = req;
   if (user) {
-    Link.find({user_api:user}, (err, links) => {
+    let {api, login} = user;
+    Link.find({user_api:api}, (err, links) => {
       if (err) {
         console.log(err);
         return res.sendStatus(400);
       }
-      return res.render("short.html", { links:links.reverse() });
+      return res.render("short.html", { links:links.reverse(), username: login });
     });
   } else {
     return res.redirect("/");
@@ -20,7 +21,7 @@ exports.getShortLink = (req, res) => {
 
 exports.createShortLink = async (req, res) => {
   const { shortList, longUrl } = req.body;
-  const api = req.user;
+  const api  = req.user? req.user.api : null ;
   let userExists = await User.exists({ api });
   let docs = await Settings.find({user_api:api}).exec();
   let settings = {};

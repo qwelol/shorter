@@ -5,10 +5,10 @@ const usersController = require("../controllers/users")
 const checkAuth = require("../services/auth").checkAuth
 
 router.get('/', checkAuth,usersController.getUsers);
-router.get('/:api', checkAuth,usersController.getUser);
-router.post('/register',usersController.createUser);
-router.post('/login',usersController.login);
-router.post('/logout',usersController.logout);
+router.get('/registration', usersController.registration);
+router.post('/registration', usersController.createUser);
+router.post('/login', usersController.login);
+router.post('/logout', usersController.logout);
 router.put('/:api', checkAuth,usersController.changeUser)
 router.delete('/:api', checkAuth,usersController.deleteUser);
 

@@ -12,8 +12,9 @@ exports.getSettings = (req, res) => {
 };
 
 exports.getUserSettings = (req, res) => {
-  const api = req.user; 
-  if (api){
+  const { user } =req;
+  if (user ){
+    const { api, login } = user; 
     User.exists({ api }, (err, val) => {
       if (err) console.log(err);
       if (val) {
@@ -28,7 +29,7 @@ exports.getUserSettings = (req, res) => {
           });
           console.log(vSet);
 
-          return res.render("settings.html", { settings: vSet });
+          return res.render("settings.html", { settings: vSet, username: login });
         });
       } else {
         return res.sendStatus(404);
@@ -41,7 +42,7 @@ exports.getUserSettings = (req, res) => {
 
 exports.createSettings = async (req, res) => {
   const { body } = req;
-  const user_api = req.user;
+  const user_api = req.user? req.user.api : null;
   const { service, params} = body;
   console.log(user_api, service);
   console.log("createSettings: "+"service", service, "params", params, "user_api", user_api);
@@ -75,7 +76,7 @@ exports.createSettings = async (req, res) => {
 };
 
 exports.changeSettings = (req, res) => {
-  const api = req.user;
+  const api = req.user? req.user.api : null;
   const { service } = req.params;
   console.log("changeSettings: ",api, service);
   const { params } = req.body;
@@ -106,10 +107,10 @@ exports.changeSettings = (req, res) => {
 };
 
 exports.deleteSettings = (req, res) => {
-  const api = req.user;
+  const api = req.user? req.user.api : null;
   const { service } = req.params;
   console.log("deleteSettings: ",api, service);
-  if ((api, service)) {
+  if (api, service) {
     Settings.exists({ user_api: api, service }, (err, val) => {
       if (err) console.log(err);
       if (val) {

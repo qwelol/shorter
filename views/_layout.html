@@ -3,27 +3,48 @@
   <head>
     <meta charset="utf-8">
     <title>{{ title }}</title>
+    <link rel="stylesheet" href="/static/css/reset.css">
     <link rel="stylesheet" href="/static/css/style.css">
-    {% if title === "Short view" %}
+    <link rel="stylesheet" href="/static/css/login.css">
+    {% if page === "short" %}
       <script type="text/javascript" src="/static/js/short.js"></script>
+      <link rel="stylesheet" href="/static/css/short.css">
     {% endif %}
-    {% if title === "Settings view" %}
+    {% if page === "settings" %}
       <script type="text/javascript" src="/static/js/settings.js"></script>
+      <link rel="stylesheet" href="/static/css/settings.css">
     {% endif %}
   </head>
   <body>
     <nav class="menu">
+    {% if username %}
       <div class="menu-container">
-        <a class="menu-item" href="/short">Short</a>
-        <a class="menu-item" href="/settings">Settings</a>
+        <div class="user-container">
+          <div class="username">{{ username }}</div>
+          <form method="POST" action="/users/logout" class="logout-form">
+            <button type="submit" class="logout-btn">Выход</button>
+          </form>
+        </div>
+        <div class="links">
+          <a class="menu-item" href="/short">Короткие ссылки</a>
+          <a class="menu-item" href="/settings">Настройки</a>
+        </div>
       </div>
-      <form method="POST" action="/users/logout" class="logout-form">
-        <button type="submit" class="logout-btn">Logout</button>
-      </form>
+    {% else %}
+      <div class="menu-container">
+        {% if page === "registration" %}
+          <a class="menu-item" href="/">Вход</a>
+        {% else %}
+          <a class="menu-item" href="/users/registration"> Регистрация</a>
+        {% endif %}
+      </div>
+    {% endif %}
     </nav>
-    <h1>{{ title }}</h1>
     <main class="main">
-      {% block content %}{% endblock %}
+      <div class="content">
+        <h1>{{ title }}</h1>
+        {% block content %}{% endblock %}
+      </div>
     </main>
     <footer>
     </footer>

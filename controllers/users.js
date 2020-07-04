@@ -9,7 +9,7 @@ exports.getUsers = (req,res)=>{
                 console.log(err);
                 return res.sendStatus(400);
             }
-            return res.render('users.html',{users});
+            return res.render('users/users.html',{users, username: user.login});
         }); 
     } else {
         return res.redirect("/");
@@ -36,7 +36,6 @@ exports.createUser = async (req,res)=>{
     const { body } = req;
     console.log("body",body);
     const { login, pass } = body;
-    // !Settings.getAll().find((record) => record.user_api === user_api && record.service === service
     if (login && pass){
         try {
             let user = await Users.findOne({
@@ -60,7 +59,7 @@ exports.createUser = async (req,res)=>{
             user.save(err=>{
                 if (err) console.log(err);
                 console.log("user",user);
-                return res.json({payload:user});
+                return res.redirect("/")
             });
         } catch (err) {
             console.log(err);
@@ -98,6 +97,9 @@ exports.deleteUser = (req,res)=>{
         if (err) return res.sendStatus(400);
         return res.json({payload: deleteResult.n});
     });
+}
+exports.registration = (req,res)=>{
+    return res.render("users/registration.html");
 }
 exports.login = (req,res)=>{
     const { login, password, remember } = req.body;
