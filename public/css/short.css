@@ -1,6 +1,39 @@
+.short-form {
+  display: flex;
+  flex-direction: column;
+}
 .short-form label {
   display: block;
 }
+.short-form .url-container {
+  display: flex;
+  align-items: center;
+  margin: 5px 0;
+}
+.short-form .url-container input[type=submit] {
+  margin: 0 10px;
+}
+.short-form .spinner {
+  display: block;
+  width: 20px;
+  height: 20px;
+  border: 4px solid rgb(184, 178, 178);
+  border-top: 4px solid rgb(255, 123, 0);
+  border-radius: 50%;
+  animation: spin 2s linear infinite;
+  visibility: hidden;
+}
+.short-form .spinner.active {
+  visibility: visible;
+}
 .params {
   border: 1px solid black;
+}
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }

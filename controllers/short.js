@@ -3,16 +3,22 @@ const Link = require("../models/short");
 const User = require("../models/users");
 const Settings = require("../models/settings");
 
-exports.getShortLink = (req, res) => {
+exports.getShortLink =  (req, res) => {
   let { user } = req;
   if (user) {
     let {api, login} = user;
-    Link.find({user_api:api}, (err, links) => {
+    Link.find({user_api:api}, async (err, links) => {
       if (err) {
         console.log(err);
         return res.sendStatus(400);
       }
-      return res.render("short.html", { links:links.reverse(), username: login });
+      let settingsArr = await Settings.find({user_api:api});
+      let settings = [];
+      settingsArr.forEach((el)=>{
+        settings.push(el["service"]);
+      });
+      console.log(settings);
+      return res.render("short.html", { links:links.reverse(), username: login, settings });
     });
   } else {
     return res.redirect("/");

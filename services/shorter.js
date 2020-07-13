@@ -26,12 +26,12 @@ async function catcutShort(url, id, secretKey, adv = "0") {
     })
     .then((data) => {
       // err comes in data text
-      let search = data.search('error');
+      let search = data.search('error')!==-1;
       let condition = (!data && search) || (data && !search);
       if (condition) {
         return BASE_SHORT_URL + data;
       } else {
-        throw new Error("catcutShort: Bad request");
+        throw new Error("catcutShort: Bad request, data:", data);
       }
     })
     .catch((err) => {

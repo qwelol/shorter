@@ -1,13 +1,17 @@
 window.onload = () => {
   let form = document.querySelector("form.short-form");
   let useCatcut = form.elements.namedItem("useCatcut");
-  useCatcut.onchange = ()=>{
-    let catCutInput = form.querySelector("#catcut");
-    catCutInput.disabled = useCatcut.checked;
-    catCutInput.checked = false;
+  if (useCatcut) {
+    useCatcut.onchange = () => {
+      let catCutInput = form.querySelector("[value=catcutShort]");
+      catCutInput.disabled = useCatcut.checked;
+      catCutInput.checked = false;
+    };
   }
   form.onsubmit = (e) => {
     e.preventDefault();
+    let spinner = document.querySelector(".short-form .spinner");
+    spinner.classList.add("active");
     if (form.elements[0].value) {
       let paramsInputs = form.querySelectorAll(".params input");
       let longUrl = form.elements[0].value;
@@ -63,7 +67,8 @@ window.onload = () => {
             td.append(delBtn);
             row.append(td);
             urlContainer.prepend(row);
-            form.elements[0].value = "";
+            form.reset();
+            spinner.classList.remove("active");
           })
           .catch((err) => {
             if (err.text) {
@@ -73,6 +78,8 @@ window.onload = () => {
               });
             }
             console.log(err);
+            form.reset();
+            spinner.classList.remove("active");
           });
       }
     }
