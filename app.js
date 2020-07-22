@@ -1,11 +1,13 @@
 const express = require("express");
 const nunjucks = require("nunjucks");
 const mongoose = require("mongoose");
-const cookieParser = require('cookie-parser');
-const checkAuth = require("./services/auth").checkAuth;
-require('dotenv').config();
+const cookieParser = require("cookie-parser");
+const { cookieExtractor, verify } = require("./services/auth");
+const passport = require("passport");
+const { Strategy } = require("passport-jwt");
+require("dotenv").config();
 
-const { PORT, PUBLIC_PATH, CONNECTION_STRING } = process.env;
+const { PORT, PUBLIC_PATH, CONNECTION_STRING, SECRET } = process.env;
 
 const app = express();
 
@@ -16,6 +18,13 @@ nunjucks.configure("views", {
   express: app,
 });
 
+let opts = {
+  jwtFromRequest: cookieExtractor,
+  secretOrKey: SECRET,
+};
+
+passport.use(new Strategy(opts, verify));
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
@@ -24,10 +33,8 @@ app.use("/static", express.static(PUBLIC_PATH));
 
 app.use("/", routes);
 
-
-
-app.get("/", checkAuth, (req, res) => {
-  if (req.user){
+app.get("/", (req, res) => {
+  if (req.cookies["user"]) {
     return res.redirect("/short");
   }
   return res.render("users/login.html");
