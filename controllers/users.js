@@ -1,6 +1,8 @@
 const Users = require("../models/users.js");
 const sha1 = require("sha1");
 const jwt = require("jsonwebtoken");
+const bcrypt = require("bcrypt");
+const saltRounds = 10;
 const { SECRET } = process.env;
 
 exports.getUsers = (req, res) => {
@@ -48,22 +50,19 @@ exports.createUser = async (req, res) => {
       if (user) {
         return res.sendStatus(400);
       }
-      let count = await Users.find({}, (err, users) => {
-        if (err) {
-          console.log(err);
-          return res.sendStatus(400);
-        }
-        return users.length;
-      });
-      user = new Users({
-        api: sha1(count),
-        login,
-        pass,
-      });
-      user.save((err) => {
-        if (err) console.log(err);
-        console.log("user", user);
-        return res.redirect("/");
+      let count = await Users.estimatedDocumentCount();
+      bcrypt.hash(pass, saltRounds, (err, hash) => {
+        if (err) return res.sendStatus(500);
+        user = new Users({
+          api: sha1(count),
+          login,
+          pass: hash,
+        });
+        user.save((err) => {
+          if (err) console.log(err);
+          console.log("user", user);
+          return res.redirect("/");
+        });
       });
     } catch (err) {
       console.log(err);
@@ -79,21 +78,15 @@ exports.changeUser = (req, res) => {
   const { api } = req.params;
   const { login, pass } = body;
   if (login && pass) {
-    Users.updateOne(
-      {
-        api,
-      },
-      {
-        login,
-        pass,
-      },
-      (err, result) => {
-        if (err) return res.sendStatus(400);
+    bcrypt.hash(pass, saltRounds, (err, hash) => {
+      if (err) return res.sendStatus(500);
+      Users.updateOne({ api }, { login, pass:hash }, (err, result) => {
+        if (err) return res.sendStatus(500);
         return res.json({ payload: result });
-      }
-    );
+      });
+    });
   } else {
-    res.sendStatus(400);
+    return res.sendStatus(400);
   }
 };
 
@@ -104,6 +97,7 @@ exports.deleteUser = (req, res) => {
     return res.json({ payload: deleteResult.n });
   });
 };
+
 exports.registration = (req, res) => {
   if (req.cookies["user"]) {
     return res.redirect("/short");
@@ -116,21 +110,24 @@ exports.login = (req, res) => {
     if (err) return res.sendStatus(500);
     if (user) {
       console.log("user", user);
-      if (password === user.pass) {
-        let expires = remember ? new Date(Date.now() + 2.592e8) : 0;
-        console.log("expires", expires);
-        let token = jwt.sign({ user: user }, SECRET);
-        return res
-          .status(200)
-          .cookie("user", token, {
-            samesite: "strict",
-            httpOnly: true,
-            expires,
-          })
-          .redirect("/short");
-      } else {
-        return res.status(400).send("Invalid credentials");
-      }
+      bcrypt.compare(password, user.pass, (err, result) => {
+        if (err) return res.sendStatus(500);
+        if (result) {
+          let expires = remember ? new Date(Date.now() + 2.592e8) : 0;
+          console.log("expires", expires);
+          let token = jwt.sign({ user: user }, SECRET);
+          return res
+            .status(200)
+            .cookie("user", token, {
+              samesite: "strict",
+              httpOnly: true,
+              expires,
+            })
+            .redirect("/short");
+        } else {
+          return res.status(400).send("Invalid credentials");
+        }
+      });
     } else {
       return res.status(404).send("User not found");
     }
