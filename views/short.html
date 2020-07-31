@@ -60,9 +60,9 @@
   <tbody>
     {% for link in links %}
     <tr>
-      <td>{{ link.short_url }}</td>
-      <td>{{ link.long_url }}</td>
-      <td>{{ link.created_at.toGMTString() }}</td>
+      <td class="short-link">{{ link.short_url }}</td>
+      <td class="long-link">{{ link.long_url }}</td>
+      <td class="date-created">{{ link.created_at.toGMTString() }}</td>
       <td>
         <button class="delete" data-id="{{ link._id }}">X</button>
       </td>

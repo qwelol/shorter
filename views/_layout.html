@@ -5,7 +5,9 @@
     <title>{{ title }}</title>
     <link rel="stylesheet" href="/static/css/reset.css">
     <link rel="stylesheet" href="/static/css/style.css">
-    <link rel="stylesheet" href="/static/css/login.css">
+    {% if page === "login" or page === "registration"%}
+      <link rel="stylesheet" href="/static/css/login.css">
+    {% endif %}
     {% if page === "short" %}
       <script type="text/javascript" src="/static/js/short.js"></script>
       <link rel="stylesheet" href="/static/css/short.css">

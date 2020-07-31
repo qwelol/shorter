@@ -1,11 +1,11 @@
-.login-form {
+.register-form, .login-form {
   width: 250px;
   display: flex;
   flex-direction: column;
   align-items: center;
   margin: auto;
 }
-.login-form label {
+.register-form label, .login-form label {
   display: flex;
   width: 100%;
   justify-content: space-between;
@@ -16,4 +16,10 @@
 }
 .login-form label.remember input {
   margin: 0px 10px 3px 0px;
+}
+.auth-message { 
+  width: 100%;
+  background: #FCEEEE;
+  color: #E7296E;
+  text-align: center;
 }

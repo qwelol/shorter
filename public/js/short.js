@@ -56,9 +56,14 @@ window.onload = () => {
             let td = document.createElement("td");
             let delBtn = document.createElement("button");
             shortUrl.textContent = data.payload.short_url;
+            shortUrl.classList.add("short-link");
+            shortUrl.onclick = copyUrl;
             longUrl.textContent = data.payload.long_url;
+            longUrl.classList.add("long-link");
             date.textContent = new Date(data.payload.created_at).toGMTString();
+            date.classList.add("date-created");
             delBtn.textContent = "X";
+            delBtn.classList.add("delete");
             delBtn.dataset.id = data.payload._id;
             delBtn.onclick = deleteUrl;
             row.append(shortUrl);
@@ -84,7 +89,7 @@ window.onload = () => {
       }
     }
   };
-  let buttons = document.querySelectorAll("button.delete");
+  let buttons = document.querySelectorAll(".links button.delete");
   for (let i = 0; i < buttons.length; i++) {
     buttons[i].onclick = deleteUrl;
   }
@@ -105,5 +110,15 @@ window.onload = () => {
     } else {
       console.log("err");
     }
+  }
+  let links = document.querySelectorAll(".links .short-link");
+  for (let i = 0; i < links.length; i++) {
+    links[i].onclick = copyUrl;
+    function copyUrl (e) {
+      navigator.clipboard.writeText(e.target.textContent).then(() => {
+        e.target.classList.toggle("highlited");
+        setTimeout(()=>{e.target.classList.toggle("highlited");},500);
+      });
+    };
   }
 };

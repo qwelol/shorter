@@ -29,6 +29,26 @@
 .params {
   border: 1px solid black;
 }
+.links .delete {
+  border: 1px solid #eee;
+  cursor: pointer;
+}
+.links .delete:hover {
+  background-color: #eee;
+}
+.links .short-link {
+  cursor: pointer;
+  transition: 0.5s;
+}
+.links .long-link {
+  cursor: default;
+}
+.highlited {
+  color: yellow;
+}
+.links .date-created {
+  cursor: default;
+}
 @keyframes spin {
   0% {
     transform: rotate(0deg);

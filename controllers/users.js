@@ -48,7 +48,9 @@ exports.createUser = async (req, res) => {
         .lean()
         .exec();
       if (user) {
-        return res.sendStatus(400);
+        return res.render("users/registration.html", {
+          err: "Такой пользователь уже существует"
+        });
       }
       let count = await Users.estimatedDocumentCount();
       bcrypt.hash(pass, saltRounds, (err, hash) => {
@@ -59,7 +61,7 @@ exports.createUser = async (req, res) => {
           pass: hash,
         });
         user.save((err) => {
-          if (err) console.log(err);
+          if (err) return res.sendStatus(500);
           console.log("user", user);
           return res.redirect("/");
         });
@@ -69,7 +71,10 @@ exports.createUser = async (req, res) => {
       return res.status(500);
     }
   } else {
-    return res.sendStatus(400);
+    res.render("users/registration.html", {
+      err: "Введите логин и пароль",
+      login
+    });
   }
 };
 
@@ -80,7 +85,7 @@ exports.changeUser = (req, res) => {
   if (login && pass) {
     bcrypt.hash(pass, saltRounds, (err, hash) => {
       if (err) return res.sendStatus(500);
-      Users.updateOne({ api }, { login, pass:hash }, (err, result) => {
+      Users.updateOne({ api }, { login, pass: hash }, (err, result) => {
         if (err) return res.sendStatus(500);
         return res.json({ payload: result });
       });
@@ -104,34 +109,48 @@ exports.registration = (req, res) => {
   }
   return res.render("users/registration.html");
 };
+
 exports.login = (req, res) => {
   const { login, password, remember } = req.body;
-  Users.findOne({ login }, (err, user) => {
-    if (err) return res.sendStatus(500);
-    if (user) {
-      console.log("user", user);
-      bcrypt.compare(password, user.pass, (err, result) => {
-        if (err) return res.sendStatus(500);
-        if (result) {
-          let expires = remember ? new Date(Date.now() + 2.592e8) : 0;
-          console.log("expires", expires);
-          let token = jwt.sign({ user: user }, SECRET);
-          return res
-            .status(200)
-            .cookie("user", token, {
-              samesite: "strict",
-              httpOnly: true,
-              expires,
-            })
-            .redirect("/short");
-        } else {
-          return res.status(400).send("Invalid credentials");
-        }
-      });
-    } else {
-      return res.status(404).send("User not found");
-    }
-  });
+  if (login && password) {
+    Users.findOne({ login }, (err, user) => {
+      if (err) return res.sendStatus(500);
+      if (user) {
+        console.log("user", user);
+        bcrypt.compare(password, user.pass, (err, result) => {
+          if (err) return res.sendStatus(500);
+          if (result) {
+            let expires = remember ? new Date(Date.now() + 2.592e8) : 0;
+            console.log("expires", expires);
+            let token = jwt.sign({ user: user }, SECRET);
+            return res
+              .status(200)
+              .cookie("user", token, {
+                samesite: "strict",
+                httpOnly: true,
+                expires,
+              })
+              .redirect("/short");
+          } else {
+            return res.render("users/login.html", {
+              err: "Неверный логин или пароль",
+              login
+            });
+          }
+        });
+      } else {
+        return res.render("users/login.html", {
+          err: "Неверный логин или пароль",
+          login
+        });
+      }
+    });
+  } else {
+    return res.render("users/login.html", {
+      err: "Введите логин и пароль",
+      login
+    });
+  }
 };
 exports.logout = (req, res) => {
   return res.clearCookie("user").redirect("/");
