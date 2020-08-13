@@ -2,72 +2,84 @@
 {% set page = 'short' %} 
 {% extends '_layout.html' %} 
 {% block content %}
-
-<form class="short-form">
-  <div class="url-container">
-    <input type="text" />
-    <input type="submit" />
-    <span class="spinner"></span>
+  <div>
+    <form class="short-form">
+      <div class="url-container">
+        <input type="text" />
+        <input type="submit" />
+        <span class="spinner"></span>
+      </div>
+      {% if (settings.indexOf("catcutShort")) != -1 %}
+      <label>
+        <input type="checkbox" name="useCatcut" />
+        <span>Использвать Catcut в качестве прослойки</span>
+      </label>
+      {% endif %}
+      <div class="params">
+        {% for servise in settings | sort %}
+        <label>
+          <input type="checkbox" value={{ servise }} />
+          <span>{{ servise }}</span>
+        </label>
+        {% endfor %}
+        <!-- <label>
+          <input type="checkbox" value="flShort" />
+          <span>Fl</span>
+        </label>
+        <label>
+          <input type="checkbox" value="shorteSt" />
+          <span>ShorteSt</span>
+        </label>
+        <label>
+          <input type="checkbox" value="exeShort" />
+          <span>Exe</span>
+        </label>
+        <label>
+          <input type="checkbox" value="profitLinkShort" />
+          <span>Profit-link</span>
+        </label>
+        <label>
+          <input type="checkbox" value="q32Short" />
+          <span>Q32</span>
+        </label>
+        <label>
+          <input type="checkbox" value="catcutShort" />
+          <span>Catcut</span>
+        </label> -->
+      </div>
+    </form>
+    <div class="err"></div>
+    <table class="links">
+      <thead>
+        <tr>
+          <td>Short Link</td>
+          <td>Long Link</td>
+          <td>Date</td>
+        </tr>
+      </thead>
+      <tbody>
+        {% for link in links %}
+        <tr>
+          <td class="short-link">{{ link.short_url }}</td>
+          <td class="long-link">{{ link.long_url }}</td>
+          <td class="date-created">{{ link.created_at.toGMTString() }}</td>
+          <td>
+            <button class="delete" data-id="{{ link._id }}">X</button>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    <div class="pagination">
+      {% for i in list %}
+        {% if (i === spread ) %}
+          <span class="spread"> {{ i }} </span>
+        {% elif currentPage === i %}
+          <a class="pagination-item current" href="#">{{ i }}</a>
+        {% else %}
+          <a class="pagination-item" href="/short?page={{ i }}">{{ i }}</a>
+        {% endif %}
+      {% endfor %}
+    </div>
   </div>
-  {% if (settings.indexOf("catcutShort")) != -1 %}
-  <label>
-    <input type="checkbox" name="useCatcut" />
-    <span>Использвать Catcut в качестве прослойки</span>
-  </label>
-  {% endif %}
-  <div class="params">
-    {% for servise in settings | sort %}
-    <label>
-      <input type="checkbox" value={{ servise }} />
-      <span>{{ servise }}</span>
-    </label>
-    {% endfor %}
-    <!-- <label>
-      <input type="checkbox" value="flShort" />
-      <span>Fl</span>
-    </label>
-    <label>
-      <input type="checkbox" value="shorteSt" />
-      <span>ShorteSt</span>
-    </label>
-    <label>
-      <input type="checkbox" value="exeShort" />
-      <span>Exe</span>
-    </label>
-    <label>
-      <input type="checkbox" value="profitLinkShort" />
-      <span>Profit-link</span>
-    </label>
-    <label>
-      <input type="checkbox" value="q32Short" />
-      <span>Q32</span>
-    </label>
-    <label>
-      <input type="checkbox" value="catcutShort" />
-      <span>Catcut</span>
-    </label> -->
-  </div>
-</form>
-<div class="err"></div>
-<table class="links">
-  <thead>
-    <tr>
-      <td>Short Link</td>
-      <td>Long Link</td>
-      <td>Date</td>
-    </tr>
-  </thead>
-  <tbody>
-    {% for link in links %}
-    <tr>
-      <td class="short-link">{{ link.short_url }}</td>
-      <td class="long-link">{{ link.long_url }}</td>
-      <td class="date-created">{{ link.created_at.toGMTString() }}</td>
-      <td>
-        <button class="delete" data-id="{{ link._id }}">X</button>
-      </td>
-    </tr>
-    {% endfor %}
-  </tbody>
-</table>
 {% endblock %}
