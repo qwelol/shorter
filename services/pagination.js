@@ -27,7 +27,7 @@ exports.createPagination = (page, maxPage, spreadSymbol, spread) => {
       list.push(spreadSymbol);
     }
   }
-  if (maxPage !== 1) {
+  if (maxPage > 1) {
     list.push(maxPage);
   }
   return list;

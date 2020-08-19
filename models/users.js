@@ -6,6 +6,7 @@ const usersSchema = new Schema(
     login: String,
     pass: String,
     api: String,
+    role: String
   },
   {
     versionKey: false,

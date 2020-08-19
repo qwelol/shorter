@@ -3,7 +3,6 @@ const passport = require("passport");
 
 exports.checkAuth = passport.authenticate("jwt", {
   session: false,
-  // successRedirect: "/short",
   failureRedirect: "/",
 });
 
@@ -21,7 +20,19 @@ exports.verify = (jwt_payload, done) => {
   } else {
     return done(null, false);
   }
-}
+};
+
+exports.checkInRole = (...roles) => (req, res, next) => {
+  if (!req.user) {
+    return res.redirect("/");
+  }
+  const hasRole = roles.find((role) => req.user.role === role);
+  console.log("hasRole", hasRole);
+  if (!hasRole) {
+    return res.redirect("/");
+  }
+  return next();
+};
 // exports.checkAuth = function checkAuth(req, res, next) {
 //   passport.authenticate("jwt", {
 //     session: false,

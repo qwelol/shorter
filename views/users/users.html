@@ -1,15 +1,35 @@
-{% set title = 'Users view' %}
+{% set title = 'Пользователи' %}
+{% set page = 'users' %}
 {% extends '_layout.html' %}
 {% block content %}
   <table>
+    <tr>
+      <td>Api</td>
+      <td>Login</td>
+      <td>Pass</td>
+      <td>Role</td>
+    </tr>
     {% for user in users %}
       <tr>
-        <td>{{ user.api }}</td>
+        <td> {{ user.api }}</td>
         <td>{{ user.login }}</td>
         <td>{{ user.pass }}</td>
+        <td>
+          <select >
+            {% for role, val in ROLES %}
+              {% if user.role === val %}
+                <option selected value={{ val }}> {{ role }} </option>
+              {% else %}
+                <option value={{ val }}> {{ role }} </option>
+              {% endif %}
+            {% else %}
+              <option> No roles </option>
+            {% endfor %}
+          </select>
+        </td>
       </tr>
     {% else %}
-      <div>This would display if the 'item' collection were empty</div>
+      <tr>No users</tr>
     {% endfor %}
   </table>
 {% endblock %}

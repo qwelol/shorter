@@ -4,6 +4,7 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const saltRounds = 10;
 const { SECRET } = process.env;
+const { ROLES } = require("../services/roles");
 
 exports.getUsers = (req, res) => {
   const { user } = req;
@@ -13,7 +14,7 @@ exports.getUsers = (req, res) => {
         console.log(err);
         return res.sendStatus(400);
       }
-      return res.render("users/users.html", { users, username: user.login });
+      return res.render("users/users.html", { users, ROLES, username: user.login });
     });
   } else {
     return res.redirect("/");
@@ -49,7 +50,7 @@ exports.createUser = async (req, res) => {
         .exec();
       if (user) {
         return res.render("users/registration.html", {
-          err: "Такой пользователь уже существует"
+          err: "Такой пользователь уже существует",
         });
       }
       let count = await Users.estimatedDocumentCount();
@@ -59,6 +60,7 @@ exports.createUser = async (req, res) => {
           api: sha1(count),
           login,
           pass: hash,
+          role: ROLES.Customer,
         });
         user.save((err) => {
           if (err) return res.sendStatus(500);
@@ -73,7 +75,7 @@ exports.createUser = async (req, res) => {
   } else {
     res.render("users/registration.html", {
       err: "Введите логин и пароль",
-      login
+      login,
     });
   }
 };
@@ -85,7 +87,7 @@ exports.changeUser = (req, res) => {
   if (login && pass) {
     bcrypt.hash(pass, saltRounds, (err, hash) => {
       if (err) return res.sendStatus(500);
-      Users.updateOne({ api }, { login, pass: hash }, (err, result) => {
+      Users.updateOne({ api }, { login, pass: hash, role }, (err, result) => {
         if (err) return res.sendStatus(500);
         return res.json({ payload: result });
       });
@@ -134,21 +136,21 @@ exports.login = (req, res) => {
           } else {
             return res.render("users/login.html", {
               err: "Неверный логин или пароль",
-              login
+              login,
             });
           }
         });
       } else {
         return res.render("users/login.html", {
           err: "Неверный логин или пароль",
-          login
+          login,
         });
       }
     });
   } else {
     return res.render("users/login.html", {
       err: "Введите логин и пароль",
-      login
+      login,
     });
   }
 };
