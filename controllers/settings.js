@@ -12,27 +12,26 @@ exports.getSettings = (req, res) => {
 };
 
 exports.getUserSettings = (req, res) => {
-  const { user } =req;
-  if (user ){
-    const { api, login } = user; 
+  const { user } = req;
+  if (user) {
+    const { api } = user;
     User.exists({ api }, (err, val) => {
-      if (err) console.log(err);
+      if (err) return res.render("error.html", { error: "Что-то пошло не так", user });
       if (val) {
         Settings.find({ user_api: api }, (err, settings) => {
           if (err) {
             console.log(err);
-            return res.sendStatus(400);
+            return res.render("error.html", { error: "Что-то пошло не так", user });
           }
           let vSet = {};
           settings.forEach((el) => {
             vSet[el.service] = el.params;
           });
           console.log(vSet);
-
-          return res.render("settings.html", { settings: vSet, username: login });
+          return res.render("settings.html", { settings: vSet, user });
         });
       } else {
-        return res.sendStatus(404);
+        return res.render("error.html", { error: "Пользователь не найден", user });
       }
     });
   } else {
@@ -42,10 +41,17 @@ exports.getUserSettings = (req, res) => {
 
 exports.createSettings = async (req, res) => {
   const { body } = req;
-  const user_api = req.user? req.user.api : null;
-  const { service, params} = body;
+  const user_api = req.user ? req.user.api : null;
+  const { service, params } = body;
   console.log(user_api, service);
-  console.log("createSettings: "+"service", service, "params", params, "user_api", user_api);
+  console.log(
+    "createSettings: " + "service",
+    service,
+    "params",
+    params,
+    "user_api",
+    user_api
+  );
   let userExists = await User.exists({ api: user_api });
   if (user_api && service && params && userExists) {
     try {
@@ -76,9 +82,9 @@ exports.createSettings = async (req, res) => {
 };
 
 exports.changeSettings = (req, res) => {
-  const api = req.user? req.user.api : null;
+  const api = req.user ? req.user.api : null;
   const { service } = req.params;
-  console.log("changeSettings: ",api, service);
+  console.log("changeSettings: ", api, service);
   const { params } = req.body;
   if (params) {
     Settings.exists({ user_api: api, service }, (err, val) => {
@@ -107,10 +113,10 @@ exports.changeSettings = (req, res) => {
 };
 
 exports.deleteSettings = (req, res) => {
-  const api = req.user? req.user.api : null;
+  const api = req.user ? req.user.api : null;
   const { service } = req.params;
-  console.log("deleteSettings: ",api, service);
-  if (api, service) {
+  console.log("deleteSettings: ", api, service);
+  if ((api, service)) {
     Settings.exists({ user_api: api, service }, (err, val) => {
       if (err) console.log(err);
       if (val) {

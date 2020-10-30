@@ -5,24 +5,22 @@
     <title>{{ title }}</title>
     <link rel="stylesheet" href="/static/css/reset.css">
     <link rel="stylesheet" href="/static/css/style.css">
-    {% if page === "login" or page === "registration"%}
-      <link rel="stylesheet" href="/static/css/login.css">
-    {% endif %}
+    <link rel="stylesheet" href="/static/css/login.css">
+    <link rel="stylesheet" href="/static/css/short.css">
+    <link rel="stylesheet" href="/static/css/settings.css">
     {% if page === "short" %}
       <script type="text/javascript" src="/static/js/short.js"></script>
-      <link rel="stylesheet" href="/static/css/short.css">
     {% endif %}
     {% if page === "settings" %}
       <script type="text/javascript" src="/static/js/settings.js"></script>
-      <link rel="stylesheet" href="/static/css/settings.css">
     {% endif %}
   </head>
   <body>
     <nav class="menu">
-    {% if username %}
+    {% if user %}
       <div class="menu-container">
         <div class="user-container">
-          <div class="username">{{ username }}</div>
+          <div class="username">{{ user.login }}</div>
           <form method="POST" action="/users/logout" class="logout-form">
             <button type="submit" class="logout-btn">Выход</button>
           </form>
@@ -30,6 +28,9 @@
         <div class="links">
           <a class="menu-item" href="/short">Короткие ссылки</a>
           <a class="menu-item" href="/settings">Настройки</a>
+          {% if user.role == "Admin" %}
+            <a class="menu-item" href="/users">Пользователи</a>
+          {% endif %}
         </div>
       </div>
     {% else %}

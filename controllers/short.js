@@ -9,7 +9,7 @@ const SPREAD_SYMBOL = "...";
 exports.getShortLink = async (req, res) => {
   let { user, query } = req;
   if (user) {
-    let { api, login } = user;
+    let { api } = user;
     let count = await Link.countDocuments({ user_api: api });
     let maxPage = Math.ceil(count / LINKS_PER_PAGE);
     let page =
@@ -22,7 +22,7 @@ exports.getShortLink = async (req, res) => {
     Link.find({ user_api: api }, async (err, links) => {
       if (err) {
         console.log(err);
-        return res.sendStatus(400);
+        return res.render("error.html", { error: "Что-то пошло не так", user });;
       }
       let settingsArr = await Settings.find({ user_api: api });
       let settings = [];
@@ -32,7 +32,7 @@ exports.getShortLink = async (req, res) => {
       console.log("settings", settings);
       return res.render("short.html", {
         links,
-        username: login,
+        user,
         settings,
         currentPage: +page,
         maxPage,

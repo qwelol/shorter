@@ -1,19 +1,19 @@
-.short-form {
+.short-page .short-form {
   display: flex;
   flex-direction: column;
 }
-.short-form label {
+.short-page .short-form label {
   display: block;
 }
-.short-form .url-container {
+.short-page .short-form .url-container {
   display: flex;
   align-items: center;
   margin: 5px 0;
 }
-.short-form .url-container input[type=submit] {
+.short-page .short-form .url-container input[type=submit] {
   margin: 0 10px;
 }
-.short-form .spinner {
+.short-page .short-form .spinner {
   display: block;
   width: 20px;
   height: 20px;
@@ -23,48 +23,54 @@
   animation: spin 2s linear infinite;
   visibility: hidden;
 }
-.short-form .spinner.active {
+.short-page .short-form .spinner.active {
   visibility: visible;
 }
-.params {
+.short-page .params {
   border: 1px solid black;
 }
-.links .delete {
+.short-page .links {
+  height: 320px;
+}
+.short-page .links tr {
+  vertical-align: top;
+}
+.short-page .links .delete {
   border: 1px solid #eee;
   cursor: pointer;
 }
-.links .delete:hover {
+.short-page .links .delete:hover {
   background-color: #eee;
 }
-.links .short-link {
+.short-page .links .short-link {
   cursor: pointer;
   transition: 0.5s;
 }
-.links .long-link {
+.short-page .links .long-link {
   cursor: default;
 }
-.highlited {
+.short-page .highlited {
   color: yellow;
 }
-.links .date-created {
+.short-page .links .date-created {
   cursor: default;
 }
-.pagination {
+.short-page .pagination {
   display: flex;
   justify-content: center;
 }
-.pagination .pagination-item {
+.short-page .pagination .pagination-item {
   color:#000;
   text-decoration: none;
   font-size: 1.2rem;
   margin: 0 5px;
   user-select: none;
 }
-.pagination .pagination-item.current {
+.short-page .pagination .pagination-item.current {
   color:red;
   cursor: default;
 }
-.pagination .spread {
+.short-page .pagination .spread {
   display: flex;
   align-items: flex-end;
   cursor: default;

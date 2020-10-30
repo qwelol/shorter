@@ -12,9 +12,9 @@ exports.getUsers = (req, res) => {
     Users.find({}, (err, users) => {
       if (err) {
         console.log(err);
-        return res.sendStatus(400);
+        return res.render("error.html", { error: "Что-то пошло не так", user });
       }
-      return res.render("users/users.html", { users, ROLES, username: user.login });
+      return res.render("users/users.html", { users, ROLES, user });
     });
   } else {
     return res.redirect("/");
@@ -55,7 +55,10 @@ exports.createUser = async (req, res) => {
       }
       let count = await Users.estimatedDocumentCount();
       bcrypt.hash(pass, saltRounds, (err, hash) => {
-        if (err) return res.sendStatus(500);
+        if (err)
+          return res.render("users/registration.html", {
+            err: "Что-то пошло не так",
+          });
         user = new Users({
           api: sha1(count),
           login,
@@ -63,14 +66,19 @@ exports.createUser = async (req, res) => {
           role: ROLES.Customer,
         });
         user.save((err) => {
-          if (err) return res.sendStatus(500);
+          if (err)
+            return res.render("users/registration.html", {
+              err: "Что-то пошло не так",
+            });
           console.log("user", user);
           return res.redirect("/");
         });
       });
     } catch (err) {
       console.log(err);
-      return res.status(500);
+      return res.render("users/registration.html", {
+        err: "Что-то пошло не так",
+      });
     }
   } else {
     res.render("users/registration.html", {
@@ -116,11 +124,19 @@ exports.login = (req, res) => {
   const { login, password, remember } = req.body;
   if (login && password) {
     Users.findOne({ login }, (err, user) => {
-      if (err) return res.sendStatus(500);
+      if (err)
+        return res.render("users/login.html", {
+          err: "Что-то пошло не так",
+          login,
+        });
       if (user) {
         console.log("user", user);
         bcrypt.compare(password, user.pass, (err, result) => {
-          if (err) return res.sendStatus(500);
+          if (err)
+            return res.render("users/login.html", {
+              err: "Что-то пошло не так",
+              login,
+            });
           if (result) {
             let expires = remember ? new Date(Date.now() + 2.592e8) : 0;
             console.log("expires", expires);

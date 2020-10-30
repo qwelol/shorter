@@ -1,5 +1,5 @@
 window.onload = () => {
-  let forms = document.querySelectorAll("form.short-form");
+  let forms = document.querySelectorAll("form.settings-form");
   for (let i = 0; i < forms.length; i++) {
     forms[i].onsubmit = (e) => {
       e.preventDefault();

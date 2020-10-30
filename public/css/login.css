@@ -17,7 +17,7 @@
 .login-form label.remember input {
   margin: 0px 10px 3px 0px;
 }
-.auth-message { 
+.login-form .auth-message, .register-form .auth-message { 
   width: 100%;
   background: #FCEEEE;
   color: #E7296E;
