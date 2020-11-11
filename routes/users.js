@@ -7,6 +7,7 @@ const { ROLES } = require("../services/roles");
 
 router.get("/", checkAuth, checkInRole(ROLES.Admin), usersController.getUsers);
 router.get("/registration", usersController.registration);
+router.get("/:api", checkAuth, checkInRole(ROLES.Admin), usersController.getUser)
 router.post("/registration", usersController.createUser);
 router.post("/login", usersController.login);
 router.post("/logout", usersController.logout);

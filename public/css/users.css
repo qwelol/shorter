@@ -1,0 +1,18 @@
+.account .user-change-form {
+    margin: auto;
+    font-size: 1.2rem;
+    width: 500px;
+}
+.account .user-change-form label {
+    display: block;
+}
+
+.account .user-change-form button {
+    display: block;
+    cursor: pointer;
+    border: 1px solid  rgb(133, 133, 133);
+}
+
+.account .user-change-form .select-cont {
+    margin: 10px 0;
+}

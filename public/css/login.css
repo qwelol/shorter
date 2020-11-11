@@ -17,9 +17,6 @@
 .login-form label.remember input {
   margin: 0px 10px 3px 0px;
 }
-.login-form .auth-message, .register-form .auth-message { 
+.login-form .error-message, .register-form .error-message { 
   width: 100%;
-  background: #FCEEEE;
-  color: #E7296E;
-  text-align: center;
 }

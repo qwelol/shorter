@@ -61,3 +61,18 @@ a.menu-item {
   margin: auto;
   padding: 0 10px;
 }
+a.no-highlighted {
+  text-decoration: none;
+  color: black;
+}
+.error-message {
+  background: #FCEEEE;
+  color: #E7296E;
+  text-align: center;
+}
+
+.good-message {
+  background: #CAFFD8;
+  color: #128810;
+  text-align: center;
+}

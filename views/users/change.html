@@ -1,0 +1,34 @@
+{% set title = 'Пользователь' %}
+{% set page = 'users' %}
+{% extends '_layout.html' %}
+{% block content %}
+  <div class="account">
+    <form class="user-change-form" data-api={{account.api}}>
+      <div class="error-message"></div>
+      <div class="good-message"></div>
+      <label> 
+        </span> Логин: </span>
+        </span> {{ account.login }} </span>
+       </label>
+      <label> Новый пароль: </label> 
+      <input type="password" id="password"/>
+      <label> Повторите пароль: </label> 
+      <input type="password" id="re-password"/>
+      <div  class="select-cont">
+        <select >
+          {% for role, val in ROLES %}
+            {% if account.role === val %}
+              <option selected value={{ val }}> {{ role }} </option>
+            {% else %}
+              <option value={{ val }}> {{ role }} </option>
+            {% endif %}
+          {% else %}
+            <option> No roles </option>
+          {% endfor %}
+        </select>
+      </div>
+      <button type="submit">Изменить</button>
+    </form>
+    <script type="text/javascript" src="/static/js/users.js"></script>
+  </div>
+{% endblock %}

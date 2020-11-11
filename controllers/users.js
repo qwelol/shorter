@@ -14,7 +14,7 @@ exports.getUsers = (req, res) => {
         console.log(err);
         return res.render("error.html", { error: "Что-то пошло не так", user });
       }
-      return res.render("users/users.html", { users, ROLES, user });
+      return res.render("users/users.html", { users, user });
     });
   } else {
     return res.redirect("/");
@@ -25,12 +25,16 @@ exports.getUser = (req, res) => {
   const { user } = req;
   if (user) {
     const { api } = req.params;
-    Users.find({ api }, (err, user) => {
+    Users.findOne({ api }, (err, account) => {
       if (err) {
         console.log(err);
-        return res.sendStatus(400);
+        return res.render("error.html", { error: "Что-то пошло не так", user });
       }
-      return res.json({ payload: user });
+      if (account) {
+        return res.render("users/change.html", { user, account, ROLES });
+      } else {
+        return res.render("error.html", { error: "Что-то пошло не так", user });
+      }
     });
   } else {
     return res.redirect("/");
@@ -91,14 +95,19 @@ exports.createUser = async (req, res) => {
 exports.changeUser = (req, res) => {
   const { body } = req;
   const { api } = req.params;
-  const { login, pass } = body;
-  if (login && pass) {
+  const { role, pass } = body;
+  if (role && pass) {
     bcrypt.hash(pass, saltRounds, (err, hash) => {
       if (err) return res.sendStatus(500);
-      Users.updateOne({ api }, { login, pass: hash, role }, (err, result) => {
+      Users.updateOne({ api }, { pass: hash, role }, (err, result) => {
         if (err) return res.sendStatus(500);
         return res.json({ payload: result });
       });
+    });
+  } else if (role) {
+    Users.updateOne({ api }, { role }, (err, result) => {
+      if (err) return res.sendStatus(500);
+      return res.json({ payload: result });
     });
   } else {
     return res.sendStatus(400);

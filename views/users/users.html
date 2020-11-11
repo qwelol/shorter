@@ -2,30 +2,21 @@
 {% set page = 'users' %}
 {% extends '_layout.html' %}
 {% block content %}
-  <table>
+  <table class="users">
     <tr>
       <td>Api</td>
       <td>Login</td>
-      <td>Pass</td>
       <td>Role</td>
     </tr>
     {% for user in users %}
       <tr>
         <td> {{ user.api }}</td>
         <td>{{ user.login }}</td>
-        <td>{{ user.pass }}</td>
         <td>
-          <select >
-            {% for role, val in ROLES %}
-              {% if user.role === val %}
-                <option selected value={{ val }}> {{ role }} </option>
-              {% else %}
-                <option value={{ val }}> {{ role }} </option>
-              {% endif %}
-            {% else %}
-              <option> No roles </option>
-            {% endfor %}
-          </select>
+          {{ user.role }}
+        </td>
+        <td>
+          <a class="no-highlighted" href={{ "users/" + user.api }}> Изменить </button>
         </td>
       </tr>
     {% else %}

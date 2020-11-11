@@ -12,7 +12,7 @@
       {% if (settings.indexOf("catcutShort")) != -1 %}
       <label>
         <input type="checkbox" name="useCatcut" />
-        <span>Использвать Catcut в качестве прослойки</span>
+        <span>Использовать Catcut в качестве прослойки</span>
       </label>
       {% endif %}
       <div class="params">
@@ -21,6 +21,8 @@
           <input type="checkbox" value={{ servise }} />
           <span>{{ servise }}</span>
         </label>
+        {% else %}
+          <label>Укажите данные от сервисов в настройках</label>
         {% endfor %}
         <!-- <label>
           <input type="checkbox" value="flShort" />
