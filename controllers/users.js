@@ -6,14 +6,11 @@ const saltRounds = 10;
 const { SECRET } = process.env;
 const { ROLES } = require("../services/roles");
 
-exports.getUsers = (req, res) => {
+exports.getUsers = (req, res, next) => {
   const { user } = req;
   if (user) {
     Users.find({}, (err, users) => {
-      if (err) {
-        console.log(err);
-        return res.render("error.html", { error: "Что-то пошло не так", user });
-      }
+      if (err) return next(err);
       return res.render("users/users.html", { users, user });
     });
   } else {
@@ -21,19 +18,16 @@ exports.getUsers = (req, res) => {
   }
 };
 
-exports.getUser = (req, res) => {
+exports.getUser = (req, res, next) => {
   const { user } = req;
   if (user) {
     const { api } = req.params;
     Users.findOne({ api }, (err, account) => {
-      if (err) {
-        console.log(err);
-        return res.render("error.html", { error: "Что-то пошло не так", user });
-      }
+      if (err) return next(err);
       if (account) {
         return res.render("users/change.html", { user, account, ROLES });
       } else {
-        return res.render("error.html", { error: "Что-то пошло не так", user });
+        return next(new Error("User not found"));
       }
     });
   } else {
@@ -41,7 +35,7 @@ exports.getUser = (req, res) => {
   }
 };
 
-exports.createUser = async (req, res) => {
+exports.createUser = async (req, res, next) => {
   const { body } = req;
   console.log("body", body);
   const { login, pass } = body;
@@ -59,10 +53,7 @@ exports.createUser = async (req, res) => {
       }
       let count = await Users.estimatedDocumentCount();
       bcrypt.hash(pass, saltRounds, (err, hash) => {
-        if (err)
-          return res.render("users/registration.html", {
-            err: "Что-то пошло не так",
-          });
+        if (err) return next(err);
         user = new Users({
           api: sha1(count),
           login,
@@ -70,19 +61,13 @@ exports.createUser = async (req, res) => {
           role: ROLES.Customer,
         });
         user.save((err) => {
-          if (err)
-            return res.render("users/registration.html", {
-              err: "Что-то пошло не так",
-            });
+          if (err) return next(err);
           console.log("user", user);
           return res.redirect("/");
         });
       });
     } catch (err) {
-      console.log(err);
-      return res.render("users/registration.html", {
-        err: "Что-то пошло не так",
-      });
+      return next(err);
     }
   } else {
     res.render("users/registration.html", {
@@ -92,21 +77,21 @@ exports.createUser = async (req, res) => {
   }
 };
 
-exports.changeUser = (req, res) => {
+exports.changeUser = (req, res, next) => {
   const { body } = req;
   const { api } = req.params;
   const { role, pass } = body;
   if (role && pass) {
     bcrypt.hash(pass, saltRounds, (err, hash) => {
-      if (err) return res.sendStatus(500);
+      if (err) return next(err);
       Users.updateOne({ api }, { pass: hash, role }, (err, result) => {
-        if (err) return res.sendStatus(500);
+        if (err) return next(err);
         return res.json({ payload: result });
       });
     });
   } else if (role) {
     Users.updateOne({ api }, { role }, (err, result) => {
-      if (err) return res.sendStatus(500);
+      if (err) return next(err);
       return res.json({ payload: result });
     });
   } else {
@@ -114,10 +99,10 @@ exports.changeUser = (req, res) => {
   }
 };
 
-exports.deleteUser = (req, res) => {
+exports.deleteUser = (req, res, next) => {
   const { api } = req.params;
   Users.deleteOne({ api }, (err, deleteResult) => {
-    if (err) return res.sendStatus(400);
+    if (err) return next(err);
     return res.json({ payload: deleteResult.n });
   });
 };
@@ -129,23 +114,15 @@ exports.registration = (req, res) => {
   return res.render("users/registration.html");
 };
 
-exports.login = (req, res) => {
+exports.login = (req, res, next) => {
   const { login, password, remember } = req.body;
   if (login && password) {
     Users.findOne({ login }, (err, user) => {
-      if (err)
-        return res.render("users/login.html", {
-          err: "Что-то пошло не так",
-          login,
-        });
+      if (err) return next(err);
       if (user) {
         console.log("user", user);
         bcrypt.compare(password, user.pass, (err, result) => {
-          if (err)
-            return res.render("users/login.html", {
-              err: "Что-то пошло не так",
-              login,
-            });
+          if (err) return next(err);
           if (result) {
             let expires = remember ? new Date(Date.now() + 2.592e8) : 0;
             console.log("expires", expires);

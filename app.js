@@ -33,6 +33,17 @@ app.use("/static", express.static(PUBLIC_PATH));
 
 app.use("/", routes);
 
+// error handling
+app.use((err, req, res, next) => {
+  let { user } = req;
+  console.error(err.stack);
+  if (res.headersSent) {
+    return next(err);
+  }
+  res.status(500);
+  return res.render("error.html", { error: "Что-то пошло не так", user });
+});
+
 app.get("/", (req, res) => {
   if (req.cookies["user"]) {
     return res.redirect("/short");

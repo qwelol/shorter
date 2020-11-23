@@ -6,7 +6,7 @@ const { createPagination } = require("../services/pagination");
 const LINKS_PER_PAGE = 10;
 const SPREAD_SYMBOL = "...";
 
-exports.getShortLink = async (req, res) => {
+exports.getShortLink = async (req, res, next) => {
   let { user, query } = req;
   if (user) {
     let { api } = user;
@@ -20,10 +20,7 @@ exports.getShortLink = async (req, res) => {
         : 1;
     let list = createPagination(page, maxPage, SPREAD_SYMBOL, 2);
     Link.find({ user_api: api }, async (err, links) => {
-      if (err) {
-        console.log(err);
-        return res.render("error.html", { error: "Что-то пошло не так", user });;
-      }
+      if (err) return next(err);
       let settingsArr = await Settings.find({ user_api: api });
       let settings = [];
       settingsArr.forEach((el) => {
@@ -48,7 +45,7 @@ exports.getShortLink = async (req, res) => {
   }
 };
 
-exports.createShortLink = async (req, res) => {
+exports.createShortLink = async (req, res, next) => {
   const { shortList, longUrl } = req.body;
   const api = req.user ? req.user.api : null;
   let userExists = await User.exists({ api });
@@ -82,8 +79,7 @@ exports.createShortLink = async (req, res) => {
         }
       }
     } catch (err) {
-      console.log(err);
-      shortUrl = "";
+      return next(err);
     }
 
     if (shortUrl) {
@@ -94,7 +90,7 @@ exports.createShortLink = async (req, res) => {
         created_at: new Date(),
       });
       link.save((err) => {
-        if (err) return res.sendStatus(500);
+        if (err) return next(err);
         console.log("link", link);
         return res.json({ payload: link });
       });
@@ -106,13 +102,13 @@ exports.createShortLink = async (req, res) => {
   }
 };
 
-exports.deleteShortLink = (req, res) => {
+exports.deleteShortLink = (req, res, next) => {
   const { user } = req;
   const { id } = req.params;
   console.log("deleteShortLink: ", id);
   if ((id, user)) {
     Link.findByIdAndDelete(id, (err, deleteResult) => {
-      if (err) return res.sendStatus(400);
+      if (err) return next(err);
       return res.json({ payload: deleteResult });
     });
   } else {
