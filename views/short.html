@@ -12,14 +12,18 @@
       {% if (settings.indexOf("catcutShort")) != -1 %}
       <label>
         <input type="checkbox" name="useCatcut" />
-        <span>Использовать Catcut в качестве прослойки</span>
+        <span>Использовать CatCut в качестве прослойки</span>
       </label>
       {% endif %}
       <div class="params">
-        {% for servise in settings | sort %}
+        {% for servise, name in functionMapping %}
         <label>
+          {% if (settings.indexOf(servise)) != -1 %}
           <input type="checkbox" value={{ servise }} />
-          <span>{{ servise }}</span>
+          {% else %}
+          <input type="checkbox" disabled value={{ servise }} />
+          {% endif %}
+          <span>{{ name }}</span>
         </label>
         {% else %}
           <label>Укажите данные от сервисов в настройках</label>
@@ -51,27 +55,29 @@
       </div>
     </form>
     <div class="err"></div>
-    <table class="links">
-      <thead>
-        <tr>
-          <td>Short Link</td>
-          <td>Long Link</td>
-          <td>Date</td>
-        </tr>
-      </thead>
-      <tbody>
-        {% for link in links %}
-        <tr>
-          <td class="short-link">{{ link.short_url }}</td>
-          <td class="long-link">{{ link.long_url }}</td>
-          <td class="date-created">{{ link.created_at.toGMTString() }}</td>
-          <td>
-            <button class="delete" data-id="{{ link._id }}">X</button>
-          </td>
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
+    <div class="links-wrapper">
+      <table class="links">
+        <thead>
+          <tr>
+            <td>Short Link</td>
+            <td>Long Link</td>
+            <td>Date</td>
+          </tr>
+        </thead>
+        <tbody>
+          {% for link in links %}
+          <tr>
+            <td class="short-link">{{ link.short_url }}</td>
+            <td class="long-link">{{ link.long_url }}</td>
+            <td class="date-created">{{ link.created_at.toGMTString() }}</td>
+            <td>
+              <button class="delete" data-id="{{ link._id }}">X</button>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
     <div class="pagination">
       {% for i in list %}
         {% if (i === spread ) %}

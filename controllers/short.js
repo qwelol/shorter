@@ -3,6 +3,7 @@ const Link = require("../models/short");
 const User = require("../models/users");
 const Settings = require("../models/settings");
 const { createPagination } = require("../services/pagination");
+const { functionMapping } = require("../services/functionMapping");
 const LINKS_PER_PAGE = 10;
 const SPREAD_SYMBOL = "...";
 
@@ -31,13 +32,14 @@ exports.getShortLink = async (req, res, next) => {
         links,
         user,
         settings,
+        functionMapping,
         currentPage: +page,
         maxPage,
         list,
         spread: SPREAD_SYMBOL,
       });
     })
-      .sort({ created_at: 1 })
+      .sort({ created_at: -1 })
       .skip((page - 1) * LINKS_PER_PAGE)
       .limit(LINKS_PER_PAGE);
   } else {

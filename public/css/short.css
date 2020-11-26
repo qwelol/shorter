@@ -29,9 +29,13 @@
 .short-page .params {
   border: 1px solid black;
 }
-.short-page .links {
+.short-page .params label {
+  user-select: none;
+}
+.short-page .links-wrapper {
   height: 320px;
 }
+
 .short-page .links tr {
   vertical-align: top;
 }
@@ -45,6 +49,7 @@
 .short-page .links .short-link {
   cursor: pointer;
   transition: 0.5s;
+  user-select: none;
 }
 .short-page .links .long-link {
   cursor: default;
