@@ -1,0 +1,22 @@
+.register-form, .login-form {
+  width: 250px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: auto;
+}
+.register-form label, .login-form label {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  align-items: center;
+}
+.login-form label.remember {
+  justify-content: flex-start;
+}
+.login-form label.remember input {
+  margin: 0px 10px 3px 0px;
+}
+.login-form .error-message, .register-form .error-message { 
+  width: 100%;
+}

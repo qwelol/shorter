@@ -4,22 +4,27 @@
   "description": "create short link app ",
   "main": "app.js",
   "scripts": {
-    "start": "nodemon app.js",
-    "start:prod":"node app.js",
+    "start": "nodemon -e html,css,js",
+    "start:prod": "node app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Damarus",
   "license": "MIT",
   "dependencies": {
+    "bcrypt": "^5.0.0",
+    "cookie-parser": "^1.4.5",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "form-data": "^3.0.0",
+    "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.9.10",
     "node-fetch": "^2.6.0",
     "nunjucks": "^3.2.1",
+    "passport": "^0.4.1",
+    "passport-jwt": "^4.0.0",
     "sha1": "^1.1.1"
   },
   "devDependencies": {
-    "nodemon": "^2.0.2"
+    "nodemon": "^2.0.4"
   }
 }

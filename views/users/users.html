@@ -1,0 +1,26 @@
+{% set title = 'Пользователи' %}
+{% set page = 'users' %}
+{% extends '_layout.html' %}
+{% block content %}
+  <table class="users">
+    <tr>
+      <td>Api</td>
+      <td>Login</td>
+      <td>Role</td>
+    </tr>
+    {% for user in users %}
+      <tr>
+        <td> {{ user.api }}</td>
+        <td>{{ user.login }}</td>
+        <td>
+          {{ user.role }}
+        </td>
+        <td>
+          <a class="no-highlighted" href={{ "users/" + user.api }}> Изменить </button>
+        </td>
+      </tr>
+    {% else %}
+      <tr>No users</tr>
+    {% endfor %}
+  </table>
+{% endblock %}

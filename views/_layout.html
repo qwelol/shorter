@@ -1,18 +1,56 @@
 <!doctype html>
-<html>
+<html lang="ru">
   <head>
     <meta charset="utf-8">
     <title>{{ title }}</title>
+    <link rel="stylesheet" href="/static/css/reset.css">
     <link rel="stylesheet" href="/static/css/style.css">
-    {% if title === "Short view" %}
+    <link rel="stylesheet" href="/static/css/login.css">
+    <link rel="stylesheet" href="/static/css/short.css">
+    <link rel="stylesheet" href="/static/css/settings.css">
+    <link rel="stylesheet" href="/static/css/users.css">
+    {% if page === "short" %}
       <script type="text/javascript" src="/static/js/short.js"></script>
     {% endif %}
-    {% if title === "Settings view" %}
+    {% if page === "settings" %}
       <script type="text/javascript" src="/static/js/settings.js"></script>
     {% endif %}
   </head>
   <body>
-    <h1>{{ title }}</h1>
-    {% block content %}{% endblock %}
+    <nav class="menu">
+    {% if user %}
+      <div class="menu-container">
+        <div class="user-container">
+          <div class="username">{{ user.login }}</div>
+          <form method="POST" action="/users/logout" class="logout-form">
+            <button type="submit" class="logout-btn">Выход</button>
+          </form>
+        </div>
+        <div class="links">
+          <a class="menu-item" href="/short">Короткие ссылки</a>
+          <a class="menu-item" href="/settings">Настройки</a>
+          {% if user.role == "Admin" %}
+            <a class="menu-item" href="/users">Пользователи</a>
+          {% endif %}
+        </div>
+      </div>
+    {% else %}
+      <div class="menu-container">
+        {% if page === "registration" %}
+          <a class="menu-item" href="/">Вход</a>
+        {% else %}
+          <a class="menu-item" href="/users/registration"> Регистрация</a>
+        {% endif %}
+      </div>
+    {% endif %}
+    </nav>
+    <main class="main">
+      <div class="content">
+        <h1>{{ title }}</h1>
+        {% block content %}{% endblock %}
+      </div>
+    </main>
+    <footer>
+    </footer>
   </body>
 </html>

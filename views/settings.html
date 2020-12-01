@@ -1,43 +1,45 @@
-{% set title = 'Settings view' %}
+{% set title = 'Настройки' %}
+{% set page = 'settings' %}
 {% extends '_layout.html' %}
 {% block content %}
   <div>
-    <form class="short-form" id="flShort" data-filled= {{ not not settings.flShort[0] }}>
+    <form class="settings-form" id="flShort" data-filled= {{ not not settings.flShort[0] }}>
       <div>Fc.lc</div>
       <label>
         <span>Api:</span><input type="text" value={{ settings.flShort[0] }} >
         <input type="submit">
       </label>
+      <span>{{ message }}</span>
     </form>
-    <form class="short-form" id="shorteSt" data-filled= {{ not not settings.shorteSt[0] }}>
+    <form class="settings-form" id="shorteSt" data-filled= {{ not not settings.shorteSt[0] }}>
       <div>Shorte.st</div>
       <label>
         <span>Api:</span><input type="text" value={{settings.shorteSt[0]}} >
         <input type="submit">
       </label>
     </form>
-    <form class="short-form" id="exeShort" data-filled= {{ not not settings.exeShort[0] }}>
+    <form class="settings-form" id="exeShort" data-filled= {{ not not settings.exeShort[0] }}>
       <div>Exe.io</div>
       <label>
         <span>Api:</span><input type="text" value={{settings.exeShort[0]}}>
         <input type="submit">
       </label>
     </form>
-    <form class="short-form" id="profitLinkShort" data-filled= {{ not not settings.profitLinkShort[0] }}>
+    <form class="settings-form" id="profitLinkShort" data-filled= {{ not not settings.profitLinkShort[0] }}>
       <div>Profit-link</div>
       <label>
         <span>Api:</span><input type="text" value={{settings.profitLinkShort[0]}} >
         <input type="submit">
       </label>
     </form>
-    <form class="short-form" id="q32Short" data-filled= {{ not not settings.q32Short[0] }}>
+    <form class="settings-form" id="q32Short" data-filled= {{ not not settings.q32Short[0] }}>
       <div>Q32</div>
       <label>
         <span>Api:</span><input type="text" value={{settings.q32Short[0]}}>
         <input type="submit">
       </label>
     </form>
-    <form class="short-form" id="catcutShort" data-filled= {{ not not (settings.catcutShort[0] and settings.catcutShort[1])}}>
+    <form class="settings-form" id="catcutShort" data-filled= {{ not not (settings.catcutShort[0] and settings.catcutShort[1])}}>
       <div>CatCut</div>
       <label>
         <span>ID:</span>

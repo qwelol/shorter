@@ -2,24 +2,58 @@ const Shorter = require("../services/shorter");
 const Link = require("../models/short");
 const User = require("../models/users");
 const Settings = require("../models/settings");
+const { createPagination } = require("../services/pagination");
+const { functionMapping } = require("../services/functionMapping");
+const LINKS_PER_PAGE = 10;
+const SPREAD_SYMBOL = "...";
 
-exports.getShortLink = (req, res) => {
-  Link.find({}, (err, links) => {
-    if (err) {
-      console.log(err);
-      return res.sendStatus(400);
-    }
-    return res.render("short.html", { links:links.reverse() });
-  });
+exports.getShortLink = async (req, res, next) => {
+  let { user, query } = req;
+  if (user) {
+    let { api } = user;
+    let count = await Link.countDocuments({ user_api: api });
+    let maxPage = Math.ceil(count / LINKS_PER_PAGE);
+    let page =
+      query && query.page && typeof +query.page === "number"
+        ? maxPage >= +query.page
+          ? +query.page
+          : maxPage
+        : 1;
+    let list = createPagination(page, maxPage, SPREAD_SYMBOL, 2);
+    Link.find({ user_api: api }, async (err, links) => {
+      if (err) return next(err);
+      let settingsArr = await Settings.find({ user_api: api });
+      let settings = [];
+      settingsArr.forEach((el) => {
+        settings.push(el["service"]);
+      });
+      console.log("settings", settings);
+      return res.render("short.html", {
+        links,
+        user,
+        settings,
+        functionMapping,
+        currentPage: +page,
+        maxPage,
+        list,
+        spread: SPREAD_SYMBOL,
+      });
+    })
+      .sort({ created_at: -1 })
+      .skip((page - 1) * LINKS_PER_PAGE)
+      .limit(LINKS_PER_PAGE);
+  } else {
+    return res.redirect("/");
+  }
 };
 
-exports.postShortLink = async (req, res) => {
-  let longUrl = req.body.url;
-  let { shortList, api } = req.body;
+exports.createShortLink = async (req, res, next) => {
+  const { shortList, longUrl } = req.body;
+  const api = req.user ? req.user.api : null;
   let userExists = await User.exists({ api });
-  let docs = await Settings.find({user_api:api}).exec();
+  let docs = await Settings.find({ user_api: api }).exec();
   let settings = {};
-  docs.forEach(el=>{
+  docs.forEach((el) => {
     settings[el.service] = el.params;
   });
   console.log(
@@ -37,14 +71,17 @@ exports.postShortLink = async (req, res) => {
     try {
       for (let i = 0; i < shortList.length; i++) {
         console.log(i);
-        shortUrl = await Shorter[shortList[i]](
-          shortUrl,
-          ...settings[shortList[i]]
-        );
+        if (settings[shortList[i]]) {
+          shortUrl = await Shorter[shortList[i]](
+            shortUrl,
+            ...settings[shortList[i]]
+          );
+        } else {
+          return res.status(400).send("No settings for " + shortList[i]);
+        }
       }
     } catch (err) {
-      console.log(err);
-      shortUrl = "";
+      return next(err);
     }
 
     if (shortUrl) {
@@ -55,7 +92,7 @@ exports.postShortLink = async (req, res) => {
         created_at: new Date(),
       });
       link.save((err) => {
-        if (err) return res.sendStatus(500);
+        if (err) return next(err);
         console.log("link", link);
         return res.json({ payload: link });
       });
@@ -67,12 +104,13 @@ exports.postShortLink = async (req, res) => {
   }
 };
 
-exports.deleteShortLink = (req, res) => {
+exports.deleteShortLink = (req, res, next) => {
+  const { user } = req;
   const { id } = req.params;
-  console.log(id);
-  if (id) {
+  console.log("deleteShortLink: ", id);
+  if ((id, user)) {
     Link.findByIdAndDelete(id, (err, deleteResult) => {
-      if (err) return res.sendStatus(400);
+      if (err) return next(err);
       return res.json({ payload: deleteResult });
     });
   } else {

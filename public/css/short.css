@@ -1,0 +1,91 @@
+.short-page .short-form {
+  display: flex;
+  flex-direction: column;
+}
+.short-page .short-form label {
+  display: block;
+}
+.short-page .short-form .url-container {
+  display: flex;
+  align-items: center;
+  margin: 5px 0;
+}
+.short-page .short-form .url-container input[type=submit] {
+  margin: 0 10px;
+}
+.short-page .short-form .spinner {
+  display: block;
+  width: 20px;
+  height: 20px;
+  border: 4px solid rgb(184, 178, 178);
+  border-top: 4px solid rgb(255, 123, 0);
+  border-radius: 50%;
+  animation: spin 2s linear infinite;
+  visibility: hidden;
+}
+.short-page .short-form .spinner.active {
+  visibility: visible;
+}
+.short-page .params {
+  border: 1px solid black;
+}
+.short-page .params label {
+  user-select: none;
+}
+.short-page .links-wrapper {
+  height: 320px;
+}
+
+.short-page .links tr {
+  vertical-align: top;
+}
+.short-page .links .delete {
+  border: 1px solid #eee;
+  cursor: pointer;
+}
+.short-page .links .delete:hover {
+  background-color: #eee;
+}
+.short-page .links .short-link {
+  cursor: pointer;
+  transition: 0.5s;
+  user-select: none;
+}
+.short-page .links .long-link {
+  cursor: default;
+}
+.short-page .highlited {
+  color: yellow;
+}
+.short-page .links .date-created {
+  cursor: default;
+}
+.short-page .pagination {
+  display: flex;
+  justify-content: center;
+}
+.short-page .pagination .pagination-item {
+  color:#000;
+  text-decoration: none;
+  font-size: 1.2rem;
+  margin: 0 5px;
+  user-select: none;
+}
+.short-page .pagination .pagination-item.current {
+  color:red;
+  cursor: default;
+}
+.short-page .pagination .spread {
+  display: flex;
+  align-items: flex-end;
+  cursor: default;
+  user-select: none;
+}
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
